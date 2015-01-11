@@ -1,0 +1,18 @@
+Z:\FriendlyARM-Tiny6410-DVD-A\Android\linux-2.6.36-android
+time2015年1月11日 17:41:53
+今天编译出来的config_android_mini6410_vga1024768
+可以支持1024 * 768 VGA 分辨率输出
+1024*768
+
+内核镜像
+zImage1024768_android
+
+编译器
+[root@xiaoweilai linux-2.6.36-android]# arm-linux-gcc -v
+Using built-in specs.
+COLLECT_GCC=arm-linux-gcc
+COLLECT_LTO_WRAPPER=/home/weixj/work/FriendlyARM-Tiny6410-DVD-A/Linux/opt/FriendlyARM/toolschain/4.5.1/bin/../libexec/gcc/arm-none-linux-gnueabi/4.5.1/lto-wrapper
+Target: arm-none-linux-gnueabi
+Configured with: /work/toolchain/build/src/gcc-4.5.1/configure --build=i686-build_pc-linux-gnu --host=i686-build_pc-linux-gnu --target=arm-none-linux-gnueabi --prefix=/opt/FriendlyARM/toolschain/4.5.1 --with-sysroot=/opt/FriendlyARM/toolschain/4.5.1/arm-none-linux-gnueabi/sys-root --enable-languages=c,c++ --disable-multilib --with-cpu=arm1176jzf-s --with-tune=arm1176jzf-s --with-fpu=vfp --with-float=softfp --with-pkgversion=ctng-1.8.1-FA --with-bugurl=http://www.arm9.net/ --disable-sjlj-exceptions --enable-__cxa_atexit --disable-libmudflap --with-host-libstdcxx='-static-libgcc -Wl,-Bstatic,-lstdc++,-Bdynamic -lm' --with-gmp=/work/toolchain/build/arm-none-linux-gnueabi/build/static --with-mpfr=/work/toolchain/build/arm-none-linux-gnueabi/build/static --with-ppl=/work/toolchain/build/arm-none-linux-gnueabi/build/static --with-cloog=/work/toolchain/build/arm-none-linux-gnueabi/build/static --with-mpc=/work/toolchain/build/arm-none-linux-gnueabi/build/static --with-libelf=/work/toolchain/build/arm-none-linux-gnueabi/build/static --enable-threads=posix --with-local-prefix=/opt/FriendlyARM/toolschain/4.5.1/arm-none-linux-gnueabi/sys-root --disable-nls --enable-symvers=gnu --enable-c99 --enable-long-long
+Thread model: posix
+gcc version 4.5.1 (ctng-1.8.1-FA) 

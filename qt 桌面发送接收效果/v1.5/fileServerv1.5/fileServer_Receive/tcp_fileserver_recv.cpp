@@ -95,11 +95,11 @@ void Tcp_FileServer_Recv::acceptConnection()
 
 void Tcp_FileServer_Recv::stop()
 {
-    tcpServer.close();
-    tcpServerConnection->close();
-    ui->serverProgressBar->reset();
-    ui->serverStatusLabel->setText(str_china("服务端就绪"));
-    ui->startButton->setEnabled(true);
+//    tcpServer.close();
+//    tcpServerConnection->close();
+//    ui->serverProgressBar->reset();
+//    ui->serverStatusLabel->setText(str_china("服务端就绪"));
+//    ui->startButton->setEnabled(true);
 
     TotalBytes = 0;
     bytesReceived = 0;
@@ -108,6 +108,7 @@ void Tcp_FileServer_Recv::stop()
     qDebug() <<"stop!!!!!";
 
     QApplication::restoreOverrideCursor();
+    ui->startButton->setEnabled(true);
 }
 
 void Tcp_FileServer_Recv::updateServerProgress()
@@ -139,7 +140,7 @@ void Tcp_FileServer_Recv::updateServerProgress()
         }
         if((tcpServerConnection->bytesAvailable() >= fileNameSize)&&(fileNameSize !=0)){
             in>>fileName;
-//            qDebug() << "filename:" <<fileName;
+            qDebug() << "filename:" <<fileName;
 
             bytesReceived += fileNameSize;
             //            localFile = new QFile(fileName);
@@ -166,7 +167,7 @@ void Tcp_FileServer_Recv::updateServerProgress()
         bytesReceived += tcpServerConnection->bytesAvailable();
         //        inBlock = tcpServerConnection->readAll();
         //        localFile->write(inBlock);
-        if(bytesReceived >TotalBytes){
+        if(bytesReceived >= TotalBytes){
 //            tcpServerConnection->setReadBufferSize();
             inBlock.append(tcpServerConnection->read(bytesNeedRecv));
             bytesReceived = TotalBytes;
@@ -181,8 +182,8 @@ void Tcp_FileServer_Recv::updateServerProgress()
         localFile->write(inBlock);
         inBlock.resize(0);
 #endif
-//        qDebug() << "bytesReceived:"<< bytesReceived;
-//        qDebug() << "TotalBytes   :"<< TotalBytes;
+        qDebug() << "bytesReceived:"<< bytesReceived;
+        qDebug() << "TotalBytes   :"<< TotalBytes;
     }
     ui->serverProgressBar->setMaximum(TotalBytes);
     ui->serverProgressBar->setValue(bytesReceived);
