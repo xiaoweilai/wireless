@@ -11,7 +11,7 @@
 #endif
 
 #define DEFAULT_PORT   "16689"
-
+#define DEFAULT_IP   "192.168.1.100"
 
 #define T1M (1*1024*1024)
 #define T1K (1*1024)
@@ -95,11 +95,11 @@ void Tcp_FileServer_Recv::acceptConnection()
 
 void Tcp_FileServer_Recv::stop()
 {
-//    tcpServer.close();
-//    tcpServerConnection->close();
-//    ui->serverProgressBar->reset();
-//    ui->serverStatusLabel->setText(str_china("服务端就绪"));
-//    ui->startButton->setEnabled(true);
+    //    tcpServer.close();
+    //    tcpServerConnection->close();
+    //    ui->serverProgressBar->reset();
+    //    ui->serverStatusLabel->setText(str_china("服务端就绪"));
+    //    ui->startButton->setEnabled(true);
 
     TotalBytes = 0;
     bytesReceived = 0;
@@ -119,18 +119,18 @@ void Tcp_FileServer_Recv::updateServerProgress()
     //    QTime cTime;
     //    cTime.start();
     //    static quint64 etime = 0;
-////0xff 0xfe 0xfd 0xfc
-//#define HEADSIZE  (4)
-//    quint8 headbuf[HEADSIZE];
+    ////0xff 0xfe 0xfd 0xfc
+    //#define HEADSIZE  (4)
+    //    quint8 headbuf[HEADSIZE];
 
-//    if(bytesReceived <= HEADSIZE)
-//    {
-//        if(tcpServerConnection->bytesAvailable() >= HEADSIZE){
-//            in>>TotalBytes>>fileNameSize;
-//            bytesReceived += sizeof(qint64)*2;
-//            inBlock.resize(0);
-//        }
-//    }
+    //    if(bytesReceived <= HEADSIZE)
+    //    {
+    //        if(tcpServerConnection->bytesAvailable() >= HEADSIZE){
+    //            in>>TotalBytes>>fileNameSize;
+    //            bytesReceived += sizeof(qint64)*2;
+    //            inBlock.resize(0);
+    //        }
+    //    }
 
     if(bytesReceived <= sizeof(qint64)*2){
         if((tcpServerConnection->bytesAvailable() >= sizeof(qint64)*2)&&(fileNameSize ==0)){
@@ -140,7 +140,7 @@ void Tcp_FileServer_Recv::updateServerProgress()
         }
         if((tcpServerConnection->bytesAvailable() >= fileNameSize)&&(fileNameSize !=0)){
             in>>fileName;
-            qDebug() << "filename:" <<fileName;
+            qDebug() << "filename:------------->>" <<fileName;
 
             bytesReceived += fileNameSize;
             //            localFile = new QFile(fileName);
@@ -168,7 +168,7 @@ void Tcp_FileServer_Recv::updateServerProgress()
         //        inBlock = tcpServerConnection->readAll();
         //        localFile->write(inBlock);
         if(bytesReceived >= TotalBytes){
-//            tcpServerConnection->setReadBufferSize();
+            //            tcpServerConnection->setReadBufferSize();
             inBlock.append(tcpServerConnection->read(bytesNeedRecv));
             bytesReceived = TotalBytes;
         }else{
@@ -202,6 +202,7 @@ void Tcp_FileServer_Recv::updateServerProgress()
         QImageReader reader(&buffer, STREAM_PIC_FORT);
         QImage image = reader.read();
 
+#if 1//显示是否占用了过多的资源？？不是这个问题
         if ( !image.isNull() ) {
             ui->imageLabel->setPixmap( QPixmap::fromImage( image ) );
             //            ui->imageLabel->setText( tr("") );
@@ -209,6 +210,7 @@ void Tcp_FileServer_Recv::updateServerProgress()
         else {
             ui->imageLabel->setText( tr("<i>Invalid image received!</i>") );
         }
+#endif
 
 
         QApplication::restoreOverrideCursor();
@@ -323,7 +325,36 @@ void Tcp_FileServer_Recv::displayError(QAbstractSocket::SocketError socketError)
 
 QString Tcp_FileServer_Recv::bindIpAddr()
 {
+#if  0
     return ui->lineEdit_ip->text();
+#else
+    QFile file("./defaultip.conf");
+
+    if(file.exists())
+    {
+        QByteArray dataFromFile;
+        QString ipaddr;
+        file.open(QIODevice::ReadOnly);
+        //dataFromFile=new QString;
+        dataFromFile=file.readAll();
+        file.close();
+        qDebug() << "read ip:" << dataFromFile;
+        ui->lineEdit_ip->setText(dataFromFile);
+        ipaddr = QString(dataFromFile);
+        qDebug() << "ipaddr :" << ipaddr;
+        return ipaddr;
+    }
+    else
+    {
+        file.open(QIODevice::WriteOnly);
+        file.write(DEFAULT_IP);
+        file.close();
+        qDebug() << "read ip:" << DEFAULT_IP;
+        ui->lineEdit_ip->setText(DEFAULT_IP);
+        return QString(DEFAULT_IP);
+    }
+
+#endif
 }
 
 quint8 Tcp_FileServer_Recv::getOnlyOneClient()
