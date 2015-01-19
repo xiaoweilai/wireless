@@ -28,8 +28,35 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(getImgThd,SIGNAL(emitMsgBoxSignal()),this,SLOT(receiveMsgBoxSignal()),Qt::DirectConnection);
 
     TimerSets();
+    ButtonSets();
+    ComBoxSets();
 
 }
+void MainWindow::ComBoxSets()
+{
+    QStringList ipaddrList;
+    ipaddrList.clear();
+    for(int i=100;i<255;i++)
+    {
+        QString ipaddr = QString("192.168.1.%1").arg(i);
+        ipaddrList << ipaddr;
+    }
+
+
+    ui->comboBox_ipaddr->addItems(ipaddrList);
+}
+
+
+void MainWindow::ButtonSets()
+{
+    connect(ui->pushButton_start,SIGNAL(clicked()),
+            this,SLOT(startActive()));
+    connect(ui->pushButton_pause,SIGNAL(clicked()),
+            this,SLOT(pauseActive()));
+    connect(ui->pushButton_quit,SIGNAL(clicked()),
+            this,SLOT(quitActive()));
+}
+
 //定时器集
 void MainWindow::TimerSets()
 {
@@ -44,7 +71,7 @@ void MainWindow::TimerSets()
         //      *i = (*i).toLower(); // 使用 * 运算符获取遍历器所指的元素
         //       qDebug()<<*i;
         connect(*i,SIGNAL(timeout()),this,SLOT(grabScreenSignal()),Qt::DirectConnection);
-        (*i)->start(100);
+//        (*i)->start(100);
 
     }
 }
@@ -56,7 +83,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::receiveMsgBoxSignal()
 {
-    qDebug() << "receiveMsgBoxSignal";
+//    qDebug() << "receiveMsgBoxSignal";
+    qDebug() << "====================================";
     //    imglist.push_back(grabframeGeometry());
     //    QImage img = grabframeGeometry();
     //    qDebug() << "grab list size:"<<imglist.count();
@@ -146,4 +174,31 @@ QImage MainWindow::covertPixTo1024768(QImage  img)
 
 #endif
     return image;
+}
+
+void MainWindow::startActive()
+{
+    QList<QTimer*>::iterator i;
+    for (i = timerlist.begin(); i != timerlist.end(); ++i) {
+        (*i)->start(100);
+
+    }
+}
+
+void MainWindow::pauseActive()
+{
+
+    QList<QTimer*>::iterator i;
+    for (i = timerlist.begin(); i != timerlist.end(); ++i) {
+        (*i)->stop();
+
+    }
+
+}
+
+void MainWindow::quitActive()
+{
+    pauseActive();
+    timerlist.clear();
+    close();
 }

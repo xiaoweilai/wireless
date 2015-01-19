@@ -28,9 +28,14 @@ private://func
     QImage grabDeskScreen();
     QImage covertPixTo1024768(QImage img);
     void TimerSets();
+    void ButtonSets();
+    void ComBoxSets();
 private slots:
     void receiveMsgBoxSignal();
     void grabScreenSignal();
+    void startActive();
+    void pauseActive();
+    void quitActive();
 };
 
 #endif // MAINWINDOW_H
