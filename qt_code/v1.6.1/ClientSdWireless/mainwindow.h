@@ -21,7 +21,6 @@ private://var
     Ui::MainWindow *ui;
     DoSendThread *getImgThd;
     QList<QImage> imglist;
-    QTimer *timer;
     QList<QTimer*> timerlist;
 
 private://func

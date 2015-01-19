@@ -15,6 +15,8 @@
 #define DEBUGINFO
 //转换分辨率
 #define ZIPCONVERTPIX
+//传输全屏幕
+#define DESKSCREENTS
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -31,10 +33,6 @@ MainWindow::MainWindow(QWidget *parent) :
 //定时器集
 void MainWindow::TimerSets()
 {
-    timer = new QTimer;
-    connect(timer,SIGNAL(timeout()),this,SLOT(grabScreenSignal()),Qt::DirectConnection);
-    timer->start(100);
-
     for( int i=0;i<TIMERNUMS;i++)
     {
         QTimer *tmptimer = new QTimer;
@@ -69,7 +67,7 @@ void MainWindow::grabScreenSignal()
     static float time_total = 0;
     QTime time;
     time.start(); //开始计时，以ms为单位
-#if 0
+#ifndef DESKSCREENTS
     /*
 grab list size: 2867
 "time:30.8666 png/s"
