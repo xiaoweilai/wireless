@@ -13,6 +13,8 @@
 
 //打印调试信息
 #define DEBUGINFO
+//转换分辨率
+#define ZIPCONVERTPIX
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -128,6 +130,7 @@ QImage MainWindow::grabDeskScreen()
 QImage MainWindow::covertPixTo1024768(QImage  img)
 {
     QImage image = img;
+#ifdef ZIPCONVERTPIX
     int imgHt = image.width();
     int imgWt = image.height();
 
@@ -141,6 +144,8 @@ QImage MainWindow::covertPixTo1024768(QImage  img)
 #ifdef DEBUGINFO
     qDebug() <<"af img ht:" << image.height();
     qDebug() <<"af img wt:" << image.width();
+#endif
+
 #endif
     return image;
 }
