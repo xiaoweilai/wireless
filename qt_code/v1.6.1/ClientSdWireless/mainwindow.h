@@ -27,6 +27,7 @@ private://var
 private://func
     QImage grabframeGeometry();
     QImage grabDeskScreen();
+    QImage covertPixTo1024768(QImage img);
     void TimerSets();
 private slots:
     void receiveMsgBoxSignal();

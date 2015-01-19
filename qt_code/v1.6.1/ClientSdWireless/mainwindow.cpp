@@ -5,7 +5,14 @@
 #include <QTime>
 
 /*定时器个数*/
-#define TIMERNUMS 40
+#define TIMERNUMS 100
+
+//分辨率比此大，则转换为此分辨率
+#define VGASTDHEIGHT 1024
+#define VGASTDWIDTH  768
+
+//打印调试信息
+#define DEBUGINFO
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -60,20 +67,20 @@ void MainWindow::grabScreenSignal()
     static float time_total = 0;
     QTime time;
     time.start(); //开始计时，以ms为单位
-#if 1
+#if 0
     /*
 grab list size: 2867
 "time:30.8666 png/s"
 now elaspe: 92.8837 s
     */
-    imglist.push_back(grabframeGeometry());
+    imglist.push_back(covertPixTo1024768(grabframeGeometry()));
 #else
 /*
 grab list size: 2433
 "time:20.5653 png/s"
 now elaspe: 118.306 s
 */
-    imglist.push_back(grabDeskScreen());
+    imglist.push_back(covertPixTo1024768(grabDeskScreen()));
 #endif
     qDebug() << "grab list size:"<<imglist.count();
 
@@ -117,3 +124,23 @@ QImage MainWindow::grabDeskScreen()
                                 QApplication::desktop()->height()).toImage();
 }
 
+//转化图片分辨率
+QImage MainWindow::covertPixTo1024768(QImage  img)
+{
+    QImage image = img;
+    int imgHt = image.width();
+    int imgWt = image.height();
+
+#ifdef DEBUGINFO
+    qDebug() <<"bf img ht:" << imgHt;
+    qDebug() <<"bf img wt:" << imgWt;
+#endif
+    if(imgHt >=VGASTDHEIGHT && imgWt >= VGASTDWIDTH)
+        image =  img.scaled(VGASTDHEIGHT, VGASTDWIDTH);
+
+#ifdef DEBUGINFO
+    qDebug() <<"af img ht:" << image.height();
+    qDebug() <<"af img wt:" << image.width();
+#endif
+    return image;
+}
