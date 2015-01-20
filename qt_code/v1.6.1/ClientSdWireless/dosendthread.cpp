@@ -16,6 +16,6 @@ void DoSendThread::run()
     {
         qDebug() << "emit signal.....";
         emit emitMsgBoxSignal();
-        Sleep(1000);
+        Sleep(2000);
     }
 }
