@@ -32,6 +32,8 @@ private://var
     quint64 picNametime;
     qint64 TotalBytes;
     qint64 byteWritten;
+    QList<qint64> totalbyteslist;
+    QList<qint64> bytesToWritelist;
     qint64 bytesToWrite;
     enum
     {
@@ -43,14 +45,15 @@ private://var
     QString m_connedipaddr; //已经连接的ip地址
     QBuffer buffer;
     QByteArray outBlock;
+    QList<QByteArray> outBlocklst;
     float time_total;
 
     int m_transfered;
 
     enum
     {
-        STAT_TRANSFERED,
-        STAT_TRANSFERING,
+        STAT_USED,
+        STAT_NOUSE,
         STAT_UNKNOWN
     };
 
@@ -70,7 +73,7 @@ private://func
     void PushBtnAllFalse();
     void PushBtnRestart();
     void SignalSets();
-    void transferring();
+    void transferno();
     void transfered();
     int gettransfered();
 private slots:
