@@ -48,6 +48,8 @@ private://var
     QList<QByteArray> outBlocklst;
     float time_total;
 
+    float time_totaltfs;
+
     int m_transfered;
 
     enum
@@ -56,7 +58,7 @@ private://var
         STAT_NOUSE,
         STAT_UNKNOWN
     };
-
+    quint64 namecounter;
 private://func
     QImage grabframeGeometry();
     QImage grabDeskScreen();
