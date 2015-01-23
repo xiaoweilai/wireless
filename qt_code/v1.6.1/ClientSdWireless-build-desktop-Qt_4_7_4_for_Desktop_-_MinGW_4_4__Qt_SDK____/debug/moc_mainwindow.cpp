@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Tue Jan 20 23:26:33 2015
+** Created: Thu Jan 22 23:53:54 2015
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-      14,   14, // methods
+      15,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -38,15 +38,16 @@ static const uint qt_meta_data_MainWindow[] = {
       45,   11,   11,   11, 0x08,
       67,   11,   11,   11, 0x08,
       86,   11,   11,   11, 0x08,
-     100,   11,   11,   11, 0x08,
-     114,   11,   11,   11, 0x08,
-     127,   11,   11,   11, 0x08,
-     143,   11,   11,   11, 0x08,
-     169,  157,   11,   11, 0x08,
-     210,   11,   11,   11, 0x08,
-     225,   11,   11,   11, 0x08,
-     248,  239,   11,   11, 0x08,
-     277,   11,   11,   11, 0x08,
+     103,   11,   11,   11, 0x08,
+     117,   11,   11,   11, 0x08,
+     131,   11,   11,   11, 0x08,
+     144,   11,   11,   11, 0x08,
+     160,   11,   11,   11, 0x08,
+     186,  174,   11,   11, 0x08,
+     227,   11,   11,   11, 0x08,
+     242,   11,   11,   11, 0x08,
+     265,  256,   11,   11, 0x08,
+     294,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -54,9 +55,9 @@ static const uint qt_meta_data_MainWindow[] = {
 static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0removelistonesig()\0"
     "transfersig()\0receiveMsgBoxSignal()\0"
-    "grabScreenSignal()\0startActive()\0"
-    "pauseActive()\0quitActive()\0startTransfer()\0"
-    "transferjpg()\0socketError\0"
+    "grabScreenSignal()\0savetimertobuf()\0"
+    "startActive()\0pauseActive()\0quitActive()\0"
+    "startTransfer()\0transferjpg()\0socketError\0"
     "displayErr(QAbstractSocket::SocketError)\0"
     "startConnect()\0stopConnect()\0numBytes\0"
     "updateClientProgress(qint64)\0removelist()\0"
@@ -95,19 +96,20 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 1: transfersig(); break;
         case 2: receiveMsgBoxSignal(); break;
         case 3: grabScreenSignal(); break;
-        case 4: startActive(); break;
-        case 5: pauseActive(); break;
-        case 6: quitActive(); break;
-        case 7: startTransfer(); break;
-        case 8: transferjpg(); break;
-        case 9: displayErr((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
-        case 10: startConnect(); break;
-        case 11: stopConnect(); break;
-        case 12: updateClientProgress((*reinterpret_cast< qint64(*)>(_a[1]))); break;
-        case 13: removelist(); break;
+        case 4: savetimertobuf(); break;
+        case 5: startActive(); break;
+        case 6: pauseActive(); break;
+        case 7: quitActive(); break;
+        case 8: startTransfer(); break;
+        case 9: transferjpg(); break;
+        case 10: displayErr((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
+        case 11: startConnect(); break;
+        case 12: stopConnect(); break;
+        case 13: updateClientProgress((*reinterpret_cast< qint64(*)>(_a[1]))); break;
+        case 14: removelist(); break;
         default: ;
         }
-        _id -= 14;
+        _id -= 15;
     }
     return _id;
 }

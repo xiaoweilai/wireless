@@ -25,6 +25,7 @@ private://var
     DoSendThread *getImgThd;
     QList<QImage> imglist;
     QList<QTimer*> timerlist;
+    QList<QTimer*> savetimerlist;
 
     /* socket 变量 */
     QTcpSocket *tcpClient;
@@ -39,9 +40,22 @@ private://var
         RET_ERR,
         ERT_UNKNOWN
     };
+    enum
+    {
+        FLAG_USED,
+        FLAG_NOUSE,
+        FLAG_UNKNOWN
+    };
 
     QString m_connedipaddr; //已经连接的ip地址
     QBuffer buffer;
+    quint8 flagbuf0;
+
+    QBuffer buffer1;
+    quint8 flagbuf1;
+
+    QList<QBuffer> bufferlst;
+    QBuffer buffertmp;
     QByteArray outBlock;
     float time_total;
 
@@ -52,6 +66,34 @@ private://var
         STAT_TRANSFERED,
         STAT_TRANSFERING,
         STAT_UNKNOWN
+    };
+
+//    QBuffer buffer1;
+    QBuffer buffer2;
+    QBuffer buffer3;
+    QBuffer buffer4;
+    QBuffer buffer5;
+    QBuffer buffer6;
+    QBuffer buffer7;
+    QBuffer buffer8;
+    QBuffer buffer9;
+    QBuffer buffer10;
+    quint8 bufused1;
+    quint8 bufused2;
+    quint8 bufused3;
+    quint8 bufused4;
+    quint8 bufused5;
+    quint8 bufused6;
+    quint8 bufused7;
+    quint8 bufused8;
+    quint8 bufused9;
+    quint8 bufused10;
+
+    enum
+    {
+        BUF_USED,
+        BUF_NOUSE,
+        BUF_UNKNOWN
     };
 
 private://func
@@ -73,9 +115,11 @@ private://func
     void transferring();
     void transfered();
     int gettransfered();
+    void BufferSets();
 private slots:
     void receiveMsgBoxSignal();
     void grabScreenSignal();
+    void savetimertobuf();
     void startActive();
     void pauseActive();
     void quitActive();

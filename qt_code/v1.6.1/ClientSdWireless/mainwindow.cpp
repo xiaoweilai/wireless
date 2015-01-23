@@ -7,6 +7,7 @@
 
 /*定时器个数*/
 #define TIMERNUMS 100
+#define SAVETIMERNUMS 100
 
 //分辨率比此大，则转换为此分辨率
 #define VGASTDHEIGHT 1024
@@ -66,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-#if 0
+#if 1
     getImgThd = new DoSendThread(NULL);
     getImgThd->start();
     connect(getImgThd,SIGNAL(emitMsgBoxSignal()),this,SLOT(receiveMsgBoxSignal()),Qt::DirectConnection);
@@ -76,6 +77,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ButtonSets();
     SocketSets();
     SignalSets();
+    BufferSets();
 
 
 }
@@ -97,37 +99,47 @@ void MainWindow::displayErr(QAbstractSocket::SocketError socketError)
 
 void MainWindow::transferjpg()
 {
-    if(imglist.count() < 3)
-        return;
-    if(STAT_TRANSFERING == gettransfered())
+    if(!imglist.count())
         return;
 
+    if(STAT_TRANSFERING != gettransfered())
+        return;
+    if((FLAG_NOUSE == flagbuf0) && (FLAG_NOUSE == flagbuf1))
+        return;
+
+//    if(0 == buffer.data().size())
+//        return;
     QTime time;
     time.start(); //开始计时，以ms为单位
 
 
 
     transferring();
-    buffer.reset();
-    outBlock.resize(0);
-#if 1
+
+//    buffer.reset();
+//    outBlock.resize(0);
+#if 0
     qDebug() << "imlist count:" << imglist.count();
     imglist.at(0).save(&buffer,STREAM_PIC_FORT);
     imglist.removeFirst();
     qDebug() << "remove imlist count:" << imglist.count();
-#else
+#elif 0
     img.save(&buffer,STREAM_PIC_FORT);
 #endif
 
-    int time_Diff = time.elapsed(); //返回从上次start()或restart()开始以来的时间差，单位ms
-    qDebug() << "save to buffer elaspe:" <<time_Diff <<"ms";
+
 
     /* 发送文件数据格式 ：
     总长度 (8bytes) | 文件名长度(qint64() 8Bytes) |由文件名长度指定
     */
 
     //图片大小
-    TotalBytes = (qint64)buffer.data().size();
+    if(FLAG_USED == flagbuf0)
+        TotalBytes = (qint64)buffer.data().size();
+    else if(FLAG_USED == flagbuf1)
+        TotalBytes = (qint64)buffer1.data().size();
+
+
     QDataStream sendOut(&outBlock, QIODevice::ReadWrite);
     sendOut.resetStatus();
     sendOut.setVersion(QDataStream::Qt_4_0);
@@ -152,16 +164,31 @@ void MainWindow::transferjpg()
 #endif
     outBlock.resize(0);
 
+
+    int time_Diff = time.elapsed(); //返回从上次start()或restart()开始以来的时间差，单位ms
+    qDebug() << "save to buffer elaspe:" <<time_Diff <<"ms";
+
+
 }
 
 void MainWindow::updateClientProgress(qint64 numBytes)
 {
+    qDebug() << "update bytes:" << numBytes;
     byteWritten += numBytes;
     if(bytesToWrite > 0)
     {
-        outBlock =  buffer.data();
-        bytesToWrite -= (int)tcpClient->write(outBlock);
-        outBlock.resize(0);
+        if(FLAG_USED == flagbuf0)
+        {
+            outBlock =  buffer.data();
+            bytesToWrite -= (int)tcpClient->write(outBlock);
+            outBlock.resize(0);
+        }
+        else if(FLAG_USED == flagbuf1)
+        {
+            outBlock =  buffer1.data();
+            bytesToWrite -= (int)tcpClient->write(outBlock);
+            outBlock.resize(0);
+        }
     }
     else
     {
@@ -174,6 +201,12 @@ void MainWindow::updateClientProgress(qint64 numBytes)
         statusBarText(jpgname);
 //        emit removelistonesig();
         transfered();
+
+//        transferjpg();
+        if(FLAG_USED == flagbuf0)
+            flagbuf0 = FLAG_NOUSE;
+        else if(FLAG_USED == flagbuf1)
+            flagbuf1 = FLAG_NOUSE;
     }
 
 }
@@ -231,7 +264,7 @@ void MainWindow::socketVarSets()
     byteWritten = 0;
     bytesToWrite = 0;
 
-    m_transfered = STAT_TRANSFERED;
+    m_transfered = STAT_TRANSFERING;
 
 }
 void MainWindow::transfered()
@@ -257,6 +290,12 @@ void MainWindow::removelist()
 #endif
     if(imglist.count())
         imglist.removeAt(0);
+}
+
+void MainWindow::BufferSets()
+{
+//    for(int i=0;i < bufferlst.count();i++)
+//        bufferlst.at(i).reset();
 }
 
 void MainWindow::SignalSets()
@@ -310,7 +349,27 @@ void MainWindow::TimerSets()
 
     }
 
+
+    for( int i=0;i<SAVETIMERNUMS;i++)
+    {
+        QTimer *tmptimer = new QTimer;
+        savetimerlist.push_back(tmptimer);
+    }
+
+    QList<QTimer*>::iterator j;
+    for (j = savetimerlist.begin(); j != savetimerlist.end(); ++j) {
+        //      *i = (*i).toLower(); // 使用 * 运算符获取遍历器所指的元素
+        //       qDebug()<<*i;
+        connect(*j,SIGNAL(timeout()),this,SLOT(savetimertobuf()),Qt::DirectConnection);
+
+    }
     time_total = 0;
+
+
+
+    flagbuf0 = FLAG_NOUSE;
+    flagbuf1 = FLAG_NOUSE;
+
 }
 
 MainWindow::~MainWindow()
@@ -325,6 +384,38 @@ void MainWindow::receiveMsgBoxSignal()
     //    imglist.push_back(grabframeGeometry());
     //    QImage img = grabframeGeometry();
     //    qDebug() << "grab list size:"<<imglist.count();
+}
+
+void MainWindow::savetimertobuf()
+{
+//    if(imglist.count() < 10)
+//        return;
+    if(!imglist.count())
+        return;
+
+    if(FLAG_NOUSE == flagbuf0)
+    {
+        buffer.reset();
+        outBlock.resize(0);
+
+        qDebug() << "imlist count:" << imglist.count();
+        imglist.at(0).save(&buffer,STREAM_PIC_FORT);
+        imglist.removeFirst();
+        qDebug() << "remove imlist count:" << imglist.count();
+        flagbuf0 = FLAG_USED;
+    }
+    else if(FLAG_NOUSE == flagbuf1)
+    {
+        buffer1.reset();
+        outBlock.resize(0);
+
+        qDebug() << "imlist count:" << imglist.count();
+        imglist.at(0).save(&buffer1,STREAM_PIC_FORT);
+        imglist.removeFirst();
+        qDebug() << "remove imlist count:" << imglist.count();
+        flagbuf1 = FLAG_USED;
+    }
+
 }
 
 void MainWindow::grabScreenSignal()
@@ -353,6 +444,18 @@ now elaspe: 118.306 s
 #endif
     //    qDebug() << "grab list size:"<<imglist.count();
 
+
+#if 0
+    buffertmp;
+    buffertmp.reset();
+
+    qDebug() << "imlist count:" << imglist.count();
+    imglist.at(0).save(&buffertmp,STREAM_PIC_FORT);
+    imglist.removeFirst();
+    qDebug() << "remove imlist count:" << imglist.count();
+//    bufferlst.push_back(buffertmp);
+
+#endif
 
     int time_Diff = time.elapsed(); //返回从上次start()或restart()开始以来的时间差，单位ms
 
@@ -448,6 +551,12 @@ void MainWindow::startActive()
         (*i)->start(100);
 
     }
+
+    QList<QTimer*>::iterator j;
+    for (j = savetimerlist.begin(); j != savetimerlist.end(); ++j) {
+        (*j)->start(10);
+    }
+
 }
 
 void MainWindow::pauseActive()
