@@ -46,6 +46,7 @@ private://var
     QBuffer buffer;
     QByteArray outBlock;
     QList<QByteArray> outBlocklst;
+    QList<QByteArray> outBlockheadlst;
     float time_total;
 
     float time_totaltfs;
@@ -59,6 +60,7 @@ private://var
         STAT_UNKNOWN
     };
     quint64 namecounter;
+    QByteArray outBlockTotal;
 private://func
     QImage grabframeGeometry();
     QImage grabDeskScreen();

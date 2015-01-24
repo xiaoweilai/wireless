@@ -201,6 +201,7 @@ void Tcp_FileServer_Recv::updateServerProgress()
 
         QImageReader reader(&buffer, STREAM_PIC_FORT);
         QImage image = reader.read();
+//        image.save(fileName);
 
 #if 1//显示是否占用了过多的资源？？不是这个问题
         if ( !image.isNull() ) {

@@ -80,8 +80,10 @@ MainWindow::MainWindow(QWidget *parent) :
     totalbyteslist.clear();
     bytesToWritelist.clear();
     outBlocklst.clear();
+    outBlockheadlst.clear();
     namecounter = 0;
     time_totaltfs = 0.0;
+    outBlockTotal.resize(0);
 }
 
 void MainWindow::displayErr(QAbstractSocket::SocketError socketError)
@@ -136,9 +138,10 @@ now elaspe: 118.306 s
 
 
 
-
-    QByteArray outBlocktmp;
-    buffer.setBuffer(&outBlocktmp);
+//图片数据
+    QByteArray outBlockjpgcout;
+    outBlockjpgcout.resize(0);
+    buffer.setBuffer(&outBlockjpgcout);
     buffer.open(QIODevice::WriteOnly);
     quint64 totalbytes = imglist.at(0).byteCount();
     totalbyteslist.push_back(totalbytes);
@@ -148,8 +151,59 @@ now elaspe: 118.306 s
     buffer.close();
     qDebug() <<"buffer size:" <<buffer.data().size();
 
-    outBlocklst.push_back(outBlocktmp);
-    qDebug() <<"outBlocklst size:" <<outBlocktmp.size();
+    outBlocklst.push_back(outBlockjpgcout);
+    qDebug() <<"outBlocklst size:" <<outBlockjpgcout.size();
+
+
+
+    ///////////////////////////////////////////
+
+    /* 发送文件数据格式 ：
+    总长度 (8bytes) | 文件名长度(qint64() 8Bytes) |由文件名长度指定
+    */
+//数据头
+
+    QByteArray outBlockhead;
+    outBlockhead.resize(0);
+//        buffer.open(QIODevice::ReadOnly);
+    QDataStream sendOut(&outBlockhead, QIODevice::WriteOnly);
+    sendOut.resetStatus();
+    sendOut.setVersion(QDataStream::Qt_4_0);
+
+    QString currentFile = QString("blog%1.%2").arg(picNametime).arg(SUFIXNAME);
+    qDebug() << "filename:"<<currentFile;
+    //发送文件名称
+    sendOut <<qint64(0) <<qint64(0) <<currentFile;
+    //TotalBytes为总数据长度，即（数据量长度+文件名长度+文件名）
+    TotalBytes = 0;
+    TotalBytes += outBlockhead.size(); //加上图片名称长度
+    qDebug() << "outBlock size jpglen:" <<TotalBytes;
+
+    sendOut.device()->seek(0);
+    //图片大小
+    qDebug() << "jpg size:" <<totalbyteslist.at(0);
+    TotalBytes += totalbyteslist.at(0);
+    //发送（数据量长度+文件名长度+文件名）
+    sendOut << TotalBytes << qint64((outBlock.size() - sizeof(qint64)*2));
+
+
+    totalbyteslist.removeAt(0);
+    qDebug() << "send TotalBytes:" <<TotalBytes;
+    qDebug() << "head size:" <<outBlockhead.size();
+    qDebug() << "cout size:" <<outBlockjpgcout.size();
+
+
+
+    outBlockTotal.append(outBlockhead);//全成一体进行传输
+    outBlockTotal.append(outBlockjpgcout);
+
+    totalbyteslist.push_back(TotalBytes);
+    outBlockhead.resize(0);
+    outBlockjpgcout.resize(0);
+
+
+    tcpClient->write(outBlockTotal);
+    ///////////////////////////////////////////
 
 
     int time_Diff = time.elapsed(); //返回从上次start()或restart()开始以来的时间差，单位ms
@@ -158,7 +212,12 @@ now elaspe: 118.306 s
     time_total += f;
 
     qDebug() << "save to buffer elaspe:" <<time_Diff <<"ms";
-    emit transfersig();
+
+    picNametime++;
+
+
+
+//    emit transfersig();
 }
 
 void MainWindow::transferjpg()
@@ -172,49 +231,13 @@ void MainWindow::transferjpg()
         time.start(); //开始计时，以ms为单位
         m_transfered = STAT_USED;
 
-        /* 发送文件数据格式 ：
-        总长度 (8bytes) | 文件名长度(qint64() 8Bytes) |由文件名长度指定
-        */
-        outBlock.resize(0);
-//        buffer.open(QIODevice::ReadOnly);
-        QDataStream sendOut(&outBlock, QIODevice::WriteOnly);
-        sendOut.resetStatus();
-        sendOut.setVersion(QDataStream::Qt_4_0);
+        TotalBytes = totalbyteslist.at(0);
+        bytesToWrite = TotalBytes - tcpClient->write(outBlockheadlst.at(0));//将名称发出后，剩余图片大小
 
-        QString currentFile = QString("blog%1.%2").arg(picNametime).arg(SUFIXNAME);
-        qDebug() << "filename:"<<currentFile;
-        //发送文件名称
-        sendOut <<qint64(0) <<qint64(0) <<currentFile;
-        //TotalBytes为总数据长度，即（数据量长度+文件名长度+文件名）
-        TotalBytes = 0;
-        TotalBytes += outBlock.size(); //加上图片名称长度
-        qDebug() << "outBlock size jpglen:" <<TotalBytes;
-
-        sendOut.device()->seek(0);
-        //图片大小
-        qDebug() << "jpg size:" <<totalbyteslist.at(0);
-        TotalBytes += totalbyteslist.at(0);
-        //发送（数据量长度+文件名长度+文件名）
-        sendOut << TotalBytes << qint64((outBlock.size() - sizeof(qint64)*2));
-
-
-        totalbyteslist.removeAt(0);
-        qDebug() << "send TotalBytes:" <<TotalBytes;
-        //        outBlock = buffer.read(TotalBytes);
-        //        sendOut << buffer.read(TotalBytes);
-        qDebug() << "outBlock size:" <<outBlock.size();
-
-
-
-        bytesToWrite = TotalBytes - tcpClient->write(outBlock);//将名称发出后，剩余图片大小
-
-        totalbyteslist.push_back(TotalBytes);
         bytesToWritelist.push_back(bytesToWrite);
-        outBlock.resize(0);
-//        buffer.close();
+
         qDebug() << "last TotalBytes:" <<TotalBytes;
         qDebug() << "last bytesToWrite:" <<bytesToWrite;
-//        imglist.removeFirst();
 
         int time_Diff = time.elapsed(); //返回从上次start()或restart()开始以来的时间差，单位ms
         qDebug() << "transfer buffer elaspe:" <<time_Diff <<"ms";
@@ -229,11 +252,21 @@ void MainWindow::transferjpg()
 
 void MainWindow::updateClientProgress(qint64 numBytes)
 {
-#if 1
+
     QTime time;
     time.start(); //开始计时，以ms为单位
 
     byteWritten += numBytes;
+    qint64 tcpwrite = 0;
+    qDebug() <<"update ---->>>>:" ;
+    if(outBlockTotal.count() >0)
+    {
+        tcpwrite = tcpClient->write(outBlockTotal);
+        qDebug() <<"tcpwrite :" << tcpwrite ;
+        qDebug() <<"byteWritten :" << byteWritten;
+    }
+
+#if 0
     if(bytesToWrite > 0)
     {
 
@@ -241,14 +274,15 @@ void MainWindow::updateClientProgress(qint64 numBytes)
         qDebug() <<"update ---->>>>:" ;
         qDebug() <<"Totalbytes  :" << TotalBytes;
 #endif
-//        qDebug() <<"update ---->>>>:" ;
-//        qDebug() <<"buffer     size:" <<buffer.data().size() ;
+        qDebug() <<"update ---->>>>:" ;
+        qDebug() <<"Totalbytes  :" << TotalBytes;
+        qDebug() <<"byteWritten :" << byteWritten;
         outBlock.resize(0);
         outBlock = outBlocklst.at(0);
 //        buffer.open(QIODevice::ReadOnly);
 //        outBlock = buffer.data();
         quint64 outBlocksize = outBlock.size();
-//        qDebug() <<"outBlocksize:" << outBlocksize;
+        qDebug() <<"outBlocksize :" << outBlocksize;
 #ifdef DEBUGINFO
         qDebug() <<"outBlocksize:" << outBlocksize;
         qDebug() <<"byteWritten :" << byteWritten;
@@ -293,29 +327,14 @@ void MainWindow::updateClientProgress(qint64 numBytes)
         bytesToWritelist.removeAt(0);
         totalbyteslist.removeAt(0);
         outBlocklst.removeAt(0);
+        outBlockheadlst.removeAt(0);
         m_transfered = STAT_NOUSE;
         transferjpg();
     }
-#else
-    byteWritten += numBytes;
-    if(bytesToWrite > 0)
-    {
-        outBlock =  buffer.data();
-        bytesToWrite -= (int)tcpClient->write(outBlock);
-        outBlock.resize(0);
-    }
-    else
-    {
-        picNametime++;
-        TotalBytes = 0;
-        byteWritten = 0;
-        QString jpgname = QString("send %1,eclpsed %2s")
-                .arg(picNametime)
-                .arg(time_total);
-        statusBarText(jpgname);
-        m_transfered = STAT_NOUSE;
-    }
+
 #endif
+
+
 }
 
 void MainWindow::startTransfer()
@@ -411,11 +430,11 @@ void MainWindow::SocketSets()
     tcpClient  =new QTcpSocket;
 
     connect(tcpClient,SIGNAL(connected()),this,
-            SLOT(startTransfer()));
+            SLOT(startTransfer()),Qt::DirectConnection);
     connect(tcpClient,SIGNAL(bytesWritten(qint64)),this,
-            SLOT(updateClientProgress(qint64)));
+            SLOT(updateClientProgress(qint64)),Qt::DirectConnection);
     connect(tcpClient,SIGNAL(error(QAbstractSocket::SocketError)),this,
-            SLOT(displayErr(QAbstractSocket::SocketError)));
+            SLOT(displayErr(QAbstractSocket::SocketError)),Qt::DirectConnection);
 }
 
 
@@ -570,5 +589,7 @@ void MainWindow::quitActive()
     socketVarSets();
     timerlist.clear();
     imglist.clear();
+    tcpClient->disconnectFromHost();
+    tcpClient->waitForDisconnected();
     close();
 }
