@@ -1,0 +1,82 @@
+#ifndef TCPCLIENTFILESEND_H
+#define TCPCLIENTFILESEND_H
+
+#include <QMainWindow>
+#include <QDialog>
+#include <QtGui>
+#include <QAbstractSocket>
+#include <QTcpSocket>
+#include <QHostAddress>
+
+
+#if 0 //ok 2pic/s
+#define STREAM_PIC_FORT "PNG"
+#define SUFIXNAME       "png"
+#elif 0 //err
+#define STREAM_PIC_FORT "BMP"
+#define SUFIXNAME       "bmp"
+#elif 0  //ok, 6pic/s
+#define STREAM_PIC_FORT "JPG"
+#define SUFIXNAME       "jpg"
+#elif 1 //ok, 6pic/s
+#define STREAM_PIC_FORT "JPEG"
+#define SUFIXNAME       "jpeg"
+#elif 0 //err,size too little
+#define STREAM_PIC_FORT "GIF"
+#define SUFIXNAME       "gif"
+#elif 0 //err,too big
+#define STREAM_PIC_FORT "TIFF"
+#define SUFIXNAME       "tiff"
+#elif 1 //not show
+#define STREAM_PIC_FORT "PPM"
+#define SUFIXNAME       "ppm"
+#endif
+
+
+
+namespace Ui {
+class tcpClientFileSend;
+}
+
+class tcpClientFileSend : public QMainWindow
+{
+    Q_OBJECT
+    
+public:
+    explicit tcpClientFileSend(QWidget *parent = 0);
+    ~tcpClientFileSend();
+    
+
+public slots:
+    void start();
+    void startTransfer();
+    void updateClientProgress(qint64 numBytes);
+    void displayErr(QAbstractSocket::SocketError socketError);
+    void openFile();
+    QImage grabframeGeometry();
+    QImage grabDeskScreen();
+    void ShutDownAll();
+    QString ReadIpAddr();
+    void PrintInfoToFile(QString str);
+
+
+private:
+    Ui::tcpClientFileSend *ui;
+
+    QTcpSocket tcpClient;
+
+    qint64 TotalBytes;
+    qint64 byteWritten;
+    qint64 bytesToWrite;
+    QString fileName;
+    QFile *localFile;
+    QByteArray outBlock;
+
+    QTimer *timer;//·¢ËÍ¶¨Ê±Æ÷
+    QVector<QImage> imageVec;
+    QImage fileImage;
+    quint64 picNametime;
+    QBuffer buffer;
+};
+
+#endif // TCPCLIENTFILESEND_H
