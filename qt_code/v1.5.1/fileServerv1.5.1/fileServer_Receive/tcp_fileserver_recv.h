@@ -54,6 +54,7 @@ public slots:
     void updateServerProgress();
     void displayError(QAbstractSocket::SocketError socketError);
     QString bindIpAddr();
+    void showifconfig(QString &ipaddr);
 
 protected:
     quint8 getOnlyOneClient();
@@ -78,6 +79,7 @@ private:
     QByteArray inBlock;
 
     qint8 OnlyOneClient; //仅一个客户端
+    QString serverip;
 
 };
 

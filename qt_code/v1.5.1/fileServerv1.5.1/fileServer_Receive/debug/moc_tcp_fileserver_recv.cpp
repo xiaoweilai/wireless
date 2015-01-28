@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'tcp_fileserver_recv.h'
 **
-** Created: Sat Jan 10 18:36:30 2015
+** Created: Mon Jan 26 20:31:23 2015
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_Tcp_FileServer_Recv[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -37,6 +37,7 @@ static const uint qt_meta_data_Tcp_FileServer_Recv[] = {
       55,   20,   20,   20, 0x0a,
       90,   78,   20,   20, 0x0a,
      141,   20,  133,   20, 0x0a,
+     161,  154,   20,   20, 0x0a,
 
        0        // eod
 };
@@ -45,7 +46,8 @@ static const char qt_meta_stringdata_Tcp_FileServer_Recv[] = {
     "Tcp_FileServer_Recv\0\0start()\0stop()\0"
     "acceptConnection()\0updateServerProgress()\0"
     "socketError\0displayError(QAbstractSocket::SocketError)\0"
-    "QString\0bindIpAddr()\0"
+    "QString\0bindIpAddr()\0ipaddr\0"
+    "showifconfig(QString&)\0"
 };
 
 const QMetaObject Tcp_FileServer_Recv::staticMetaObject = {
@@ -84,9 +86,10 @@ int Tcp_FileServer_Recv::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 4: displayError((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
         case 5: { QString _r = bindIpAddr();
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
+        case 6: showifconfig((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 6;
+        _id -= 7;
     }
     return _id;
 }

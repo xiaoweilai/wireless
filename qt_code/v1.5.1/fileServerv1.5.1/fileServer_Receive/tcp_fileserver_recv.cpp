@@ -1,5 +1,6 @@
 #include "tcp_fileserver_recv.h"
 #include "ui_tcp_fileserver_recv.h"
+#include <QNetworkInterface>
 
 #if 1
 //编码汉字
@@ -11,7 +12,7 @@
 #endif
 
 #define DEFAULT_PORT   "16689"
-#define DEFAULT_IP   "192.168.1.100"
+#define DEFAULT_IP   "192.168.1.102"
 
 #define T1M (1*1024*1024)
 #define T1K (1*1024)
@@ -37,6 +38,10 @@ Tcp_FileServer_Recv::Tcp_FileServer_Recv(QWidget *parent) :
     bytesNeedRecv = 0;
     OnlyOneClient = FLAGS_NONE;
 
+//    QByteArray username = ;
+    serverip = bindIpAddr();
+    qDebug() <<"host ipaddr:" << serverip;
+
     start();
     connect(ui->startButton, SIGNAL(clicked()), this, SLOT(start()));
     connect(ui->stopButton, SIGNAL(clicked()), this, SLOT(stop()));
@@ -44,6 +49,8 @@ Tcp_FileServer_Recv::Tcp_FileServer_Recv(QWidget *parent) :
     connect(ui->quitButton, SIGNAL(clicked()), this, SLOT(close()));
     connect(&tcpServer, SIGNAL(newConnection()),
             this, SLOT(acceptConnection()));
+
+//    showifconfig();
 }
 
 Tcp_FileServer_Recv::~Tcp_FileServer_Recv()
@@ -58,7 +65,11 @@ void Tcp_FileServer_Recv::start()
     QApplication::setOverrideCursor(Qt::WaitCursor);
     bytesReceived = 0;
     QHostAddress hostaddr;
-    hostaddr.setAddress(bindIpAddr());
+    qDebug() <<"bind addr:" << serverip;
+//    serverip = DEFAULT_IP;
+    hostaddr.setAddress(serverip);
+
+    ui->imageLabel->setText(QString("please connect ip:%1").arg(serverip));
 
     while (!tcpServer.isListening() &&
            //           !tcpServer.listen(QHostAddress::LocalHost,16689)) {
@@ -325,8 +336,14 @@ void Tcp_FileServer_Recv::displayError(QAbstractSocket::SocketError socketError)
 
 QString Tcp_FileServer_Recv::bindIpAddr()
 {
-#if  0
-    return ui->lineEdit_ip->text();
+    QString ipaddr;
+    ipaddr.clear();
+    showifconfig(ipaddr);
+    qDebug() <<"local ip:" << ipaddr;
+    ui->lineEdit_ip->setText(ipaddr);
+    return ipaddr;
+#if  1
+//    return ui->lineEdit_ip->text();
 #else
     QFile file("./defaultip.conf");
 
@@ -355,6 +372,61 @@ QString Tcp_FileServer_Recv::bindIpAddr()
     }
 
 #endif
+}
+
+//qt实现类似于ifconfig -a功能
+void Tcp_FileServer_Recv::showifconfig(QString &ipaddr)
+{
+//    QStringList envVariables;
+//    QByteArray username;
+    QList<QHostAddress> broadcastAddresses;
+    QList<QHostAddress> ipAddresses;
+
+    //    envVariables << "USERNAME.*" <<"USER.*" <<"USERDOMAIN.*"
+    //                 <<"HOSTNAME.*" << "DOMAINNAME.*";
+    //    QStringList environment = QProcess::systemEnvironment();
+    //    foreach (QString string, envVariables) {
+    //        int index = environment.indexOf(QRegExp(string));
+    //        if(-1 != index){
+    //            QStringList stringList = environment.at(index).split("=");
+    //            if(stringList.size() == 2){
+    //                username = stringList.at(1).toUtf8();
+    //                qDebug() << username.data();
+    //                break;
+    //            }
+    //        }
+    //    }
+
+    broadcastAddresses.clear();
+    ipAddresses.clear();
+    qDebug() << "Interface numbers:"
+             <<QNetworkInterface::allInterfaces().count();
+
+    foreach (QNetworkInterface interface,
+             QNetworkInterface::allInterfaces()) {
+//        qDebug() << "Interface name:" << interface.name() <<endl
+//                 <<"Interface hardwareAddress:"
+//                <<interface.hardwareAddress()<<endl
+//               <<"entry numbers:" << interface.addressEntries().count();
+        foreach (QNetworkAddressEntry entry, interface.addressEntries()) {
+            QHostAddress broadcastAddress = entry.broadcast();
+
+//            qDebug() << "entry ip:" << entry.ip()
+//                     <<"entry netmask:" <<entry.netmask();
+
+            if(entry.ip().toString().contains("192.168.1"))
+            {
+                ipaddr = entry.ip().toString();
+                return;
+            }
+
+            if(broadcastAddress != QHostAddress::Null){
+                broadcastAddresses << broadcastAddress;
+                ipAddresses << entry.ip();
+            }
+        }
+
+    }
 }
 
 quint8 Tcp_FileServer_Recv::getOnlyOneClient()
