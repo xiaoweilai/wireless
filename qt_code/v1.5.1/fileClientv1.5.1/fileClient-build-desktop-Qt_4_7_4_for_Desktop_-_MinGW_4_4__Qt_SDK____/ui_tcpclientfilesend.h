@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'tcpclientfilesend.ui'
 **
-** Created: Sat Jan 24 15:22:17 2015
-**      by: Qt User Interface Compiler version 4.7.4
+** Created: Fri Jan 30 00:44:53 2015
+**      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -14,7 +14,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
-#include <QtGui/QCheckBox>
+#include <QtGui/QComboBox>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -39,7 +39,7 @@ public:
     QLabel *label;
     QLineEdit *lineEditPort;
     QLabel *label_2;
-    QCheckBox *checkBox_fullscreen;
+    QComboBox *comboBox_grabScreenSize;
 
     void setupUi(QMainWindow *tcpClientFileSend)
     {
@@ -53,7 +53,7 @@ public:
         startButton->setGeometry(QRect(80, 180, 101, 61));
         quitButton = new QPushButton(centralWidget);
         quitButton->setObjectName(QString::fromUtf8("quitButton"));
-        quitButton->setGeometry(QRect(340, 180, 101, 61));
+        quitButton->setGeometry(QRect(220, 180, 101, 61));
         openButton = new QPushButton(centralWidget);
         openButton->setObjectName(QString::fromUtf8("openButton"));
         openButton->setGeometry(QRect(440, 70, 81, 40));
@@ -79,10 +79,9 @@ public:
         label_2 = new QLabel(centralWidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         label_2->setGeometry(QRect(380, 40, 31, 21));
-        checkBox_fullscreen = new QCheckBox(centralWidget);
-        checkBox_fullscreen->setObjectName(QString::fromUtf8("checkBox_fullscreen"));
-        checkBox_fullscreen->setGeometry(QRect(440, 40, 71, 16));
-        checkBox_fullscreen->setChecked(true);
+        comboBox_grabScreenSize = new QComboBox(centralWidget);
+        comboBox_grabScreenSize->setObjectName(QString::fromUtf8("comboBox_grabScreenSize"));
+        comboBox_grabScreenSize->setGeometry(QRect(350, 180, 161, 51));
         tcpClientFileSend->setCentralWidget(centralWidget);
 
         retranslateUi(tcpClientFileSend);
@@ -100,7 +99,6 @@ public:
         labelRate->setText(QString());
         label->setText(QApplication::translate("tcpClientFileSend", "\344\270\273\346\234\272", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("tcpClientFileSend", "\347\253\257\345\217\243", 0, QApplication::UnicodeUTF8));
-        checkBox_fullscreen->setText(QApplication::translate("tcpClientFileSend", "\345\205\250\345\261\217", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

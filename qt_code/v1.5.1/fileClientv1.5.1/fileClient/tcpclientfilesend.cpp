@@ -50,6 +50,21 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     ui->lineEditHost->setText(ReadIpAddr());
     ui->lineEditPort->setText(DEFAULT_PORT);
 
+    QStringList screensize;
+    screensize.clear();
+    screensize <<"gemetory size"
+              <<"800 X 600"
+             <<"1024 X 768"
+            <<"fullscreen";
+    ui->comboBox_grabScreenSize->addItems(screensize);
+    ui->comboBox_grabScreenSize->setCurrentIndex(1);//"800 X 600"
+
+    QString dirname = QString("images");
+    QDir dir(QDir::currentPath());
+    if(!dir.exists(dirname))
+    {
+        dir.mkdir(dirname);
+    }
 
     connect(ui->startButton,SIGNAL(clicked()),this,SLOT(start()));
     connect(ui->quitButton,SIGNAL(clicked()),this,SLOT(ShutDownAll()));
@@ -94,14 +109,10 @@ startTransfer()槽函数。
  */
 void tcpClientFileSend::startTransfer()
 {
-    //桌面尺寸
-    if(ui->checkBox_fullscreen->isChecked())
-    {
-      fileImage = grabDeskScreen();
-    }else{//软件尺寸
-       fileImage = grabframeGeometry();
-    }
-//    fileImage =fileImage.convertToFormat(QImage::Format_Indexed8,Qt::AutoColor);
+
+    fileImage = grabframeGeometry();
+
+    //    fileImage =fileImage.convertToFormat(QImage::Format_Indexed8,Qt::AutoColor);
 
 
     buffer.reset();
@@ -123,7 +134,7 @@ void tcpClientFileSend::startTransfer()
     sendOut.setVersion(QDataStream::Qt_4_0);
 
 
-/*---------------------------------------
+    /*---------------------------------------
 数据流发送顺序：
 文件名称 abc.jpg
 文件名称的长度  7
@@ -143,7 +154,7 @@ void tcpClientFileSend::startTransfer()
     //TotalBytes为总数据长度，即（数据量长度+文件名长度+文件名）
     TotalBytes += outBlock.size(); //加上图片名称长度
     sendOut.device()->seek(0);
-/*---------------------------------------
+    /*---------------------------------------
 发送文件数据格式 ：
 
 1.总长度 (8bytes)
@@ -229,11 +240,34 @@ QImage tcpClientFileSend::grabDeskScreen()
 //界面尺寸
 QImage tcpClientFileSend::grabframeGeometry()
 {
-    return QPixmap::grabWindow(QApplication::desktop()->winId(),
-                               pos().x(),
-                               pos().y(),
-                               frameGeometry().width(),
-                               frameGeometry().height()).toImage();
+    if(ui->comboBox_grabScreenSize->currentText().contains("800"))
+    {
+        return QPixmap::grabWindow(QApplication::desktop()->winId(),
+                                   pos().x(),
+                                   pos().y(),
+                                   800,
+                                   600).toImage();
+    }
+    else if(ui->comboBox_grabScreenSize->currentText().contains("1024"))
+    {
+        return QPixmap::grabWindow(QApplication::desktop()->winId(),
+                                   pos().x(),
+                                   pos().y(),
+                                   1024,
+                                   768).toImage();
+    }
+    else if(ui->comboBox_grabScreenSize->currentText().contains("fullscreen"))
+    {
+        return grabDeskScreen();
+    }
+    else
+    {
+        return QPixmap::grabWindow(QApplication::desktop()->winId(),
+                                   pos().x(),
+                                   pos().y(),
+                                   frameGeometry().width(),
+                                   frameGeometry().height()).toImage();
+    }
 
 }
 
