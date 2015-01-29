@@ -57,6 +57,7 @@ public slots:
     QImage grabDeskScreen();
     void ShutDownAll();
     QString ReadIpAddr();
+    void SaveIpAddr(QString ipaddr);
     void PrintInfoToFile(QString str);
 
 

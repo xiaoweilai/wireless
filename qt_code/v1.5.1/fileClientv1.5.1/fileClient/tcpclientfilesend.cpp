@@ -109,6 +109,7 @@ startTransfer()²Ûº¯Êý¡£
  */
 void tcpClientFileSend::startTransfer()
 {
+    SaveIpAddr(ui->lineEditHost->text());
 
     fileImage = grabframeGeometry();
 
@@ -309,6 +310,20 @@ QString tcpClientFileSend::ReadIpAddr()
         file.close();
         qDebug() << "read ip:" << DEFAULT_HOSTADDR;
         return QString(DEFAULT_HOSTADDR);
+    }
+}
+
+void tcpClientFileSend::SaveIpAddr(QString ipaddr)
+{
+    QFile file("./serverip.conf");
+    static uint8_t saveflag = 0;
+
+    if(file.exists() && 0==saveflag)
+    {
+        file.open(QIODevice::WriteOnly);
+        file.write(ipaddr.toLocal8Bit());
+        file.close();
+        saveflag = 1;
     }
 }
 

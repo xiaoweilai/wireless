@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'tcpclientfilesend.h'
 **
-** Created: Sat Jan 24 15:22:24 2015
-**      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
+** Created: Fri Jan 30 00:52:31 2015
+**      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -10,8 +10,8 @@
 #include "../../fileClient/tcpclientfilesend.h"
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'tcpclientfilesend.h' doesn't include <QObject>."
-#elif Q_MOC_OUTPUT_REVISION != 62
-#error "This file was generated using the moc from 4.7.4. It"
+#elif Q_MOC_OUTPUT_REVISION != 63
+#error "This file was generated using the moc from 4.8.1. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -20,10 +20,10 @@ QT_BEGIN_MOC_NAMESPACE
 static const uint qt_meta_data_tcpClientFileSend[] = {
 
  // content:
-       5,       // revision
+       6,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -40,7 +40,8 @@ static const uint qt_meta_data_tcpClientFileSend[] = {
      172,   18,  145,   18, 0x0a,
      189,   18,   18,   18, 0x0a,
      211,   18,  203,   18, 0x0a,
-     228,  224,   18,   18, 0x0a,
+     231,  224,   18,   18, 0x0a,
+     255,  251,   18,   18, 0x0a,
 
        0        // eod
 };
@@ -51,12 +52,42 @@ static const char qt_meta_stringdata_tcpClientFileSend[] = {
     "socketError\0displayErr(QAbstractSocket::SocketError)\0"
     "openFile()\0QImage\0grabframeGeometry()\0"
     "grabDeskScreen()\0ShutDownAll()\0QString\0"
-    "ReadIpAddr()\0str\0PrintInfoToFile(QString)\0"
+    "ReadIpAddr()\0ipaddr\0SaveIpAddr(QString)\0"
+    "str\0PrintInfoToFile(QString)\0"
+};
+
+void tcpClientFileSend::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        Q_ASSERT(staticMetaObject.cast(_o));
+        tcpClientFileSend *_t = static_cast<tcpClientFileSend *>(_o);
+        switch (_id) {
+        case 0: _t->start(); break;
+        case 1: _t->startTransfer(); break;
+        case 2: _t->updateClientProgress((*reinterpret_cast< qint64(*)>(_a[1]))); break;
+        case 3: _t->displayErr((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
+        case 4: _t->openFile(); break;
+        case 5: { QImage _r = _t->grabframeGeometry();
+            if (_a[0]) *reinterpret_cast< QImage*>(_a[0]) = _r; }  break;
+        case 6: { QImage _r = _t->grabDeskScreen();
+            if (_a[0]) *reinterpret_cast< QImage*>(_a[0]) = _r; }  break;
+        case 7: _t->ShutDownAll(); break;
+        case 8: { QString _r = _t->ReadIpAddr();
+            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
+        case 9: _t->SaveIpAddr((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 10: _t->PrintInfoToFile((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        default: ;
+        }
+    }
+}
+
+const QMetaObjectExtraData tcpClientFileSend::staticMetaObjectExtraData = {
+    0,  qt_static_metacall 
 };
 
 const QMetaObject tcpClientFileSend::staticMetaObject = {
     { &QMainWindow::staticMetaObject, qt_meta_stringdata_tcpClientFileSend,
-      qt_meta_data_tcpClientFileSend, 0 }
+      qt_meta_data_tcpClientFileSend, &staticMetaObjectExtraData }
 };
 
 #ifdef Q_NO_DATA_RELOCATION
@@ -82,23 +113,9 @@ int tcpClientFileSend::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        switch (_id) {
-        case 0: start(); break;
-        case 1: startTransfer(); break;
-        case 2: updateClientProgress((*reinterpret_cast< qint64(*)>(_a[1]))); break;
-        case 3: displayErr((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
-        case 4: openFile(); break;
-        case 5: { QImage _r = grabframeGeometry();
-            if (_a[0]) *reinterpret_cast< QImage*>(_a[0]) = _r; }  break;
-        case 6: { QImage _r = grabDeskScreen();
-            if (_a[0]) *reinterpret_cast< QImage*>(_a[0]) = _r; }  break;
-        case 7: ShutDownAll(); break;
-        case 8: { QString _r = ReadIpAddr();
-            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 9: PrintInfoToFile((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        default: ;
-        }
-        _id -= 10;
+        if (_id < 11)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 11;
     }
     return _id;
 }
