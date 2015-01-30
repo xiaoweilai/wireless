@@ -9,6 +9,9 @@
 //#define DEBUG    /* 调试信息 */
 //#define TIMETEST /* 耗时测试 */
 
+const char version_filetransClient[]="v1.0";
+
+
 #if 1
 //编码汉字
 //#define str_china(A)     QString::fromLocal8Bit(#A)
@@ -48,7 +51,7 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
 
     ui->startButton->setEnabled(false);
     ui->lineEditHost->setText(ReadIpAddr());
-    ui->lineEditPort->setText(DEFAULT_PORT);
+//    ui->lineEditPort->setText(DEFAULT_PORT);
 
     QStringList screensize;
     screensize.clear();
@@ -69,6 +72,7 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     connect(ui->startButton,SIGNAL(clicked()),this,SLOT(start()));
     connect(ui->quitButton,SIGNAL(clicked()),this,SLOT(ShutDownAll()));
     connect(ui->openButton,SIGNAL(clicked()),this,SLOT(openFile()));
+    connect(ui->pushbtn_about,SIGNAL(clicked()),this,SLOT(aboutVer()));
 
     connect(&tcpClient,SIGNAL(connected()),this,
             SLOT(startTransfer()));
@@ -80,12 +84,9 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,
             SLOT(startTransfer()));
-    //    connect(timer,SIGNAL(timeout()),this,
-    //            SLOT(parseImage));
 
     connect(this,SIGNAL(emitImgZeroSignal()),this,
             SLOT(parseImage()));
-
 
 }
 
@@ -97,6 +98,7 @@ tcpClientFileSend::~tcpClientFileSend()
 void tcpClientFileSend::openFile()
 {
     ui->startButton->setEnabled(true);
+    ui->clientStatusLabel->setText(str_china("请点击开始远程传输"));
 }
 
 
@@ -108,7 +110,7 @@ void tcpClientFileSend::start()
     byteWritten = 0;
     ui->clientStatusLabel->setText(str_china("连接中..."));
     tcpClient.connectToHost(ui->lineEditHost->text(),
-                            ui->lineEditPort->text().toInt());
+                            QString(DEFAULT_PORT).toInt());
 
     tcpClient.setSocketOption(QAbstractSocket::LowDelayOption, 1);//优化为最低延迟，后面的1代码启用该优化。
 
@@ -125,7 +127,7 @@ void tcpClientFileSend::startTransfer()
 
 #endif /* 耗时测试 */
 
-    ui->clientStatusLabel->setText(str_china("连接成功"));
+//    ui->clientStatusLabel->setText(str_china("连接成功"));
 
     timer->start(10);
     SaveIpAddr(ui->lineEditHost->text());
@@ -256,9 +258,6 @@ void tcpClientFileSend::parseImage()
     file.close();
     dir.remove(readFname);//删除文件
 
-    ui->clientProgressBar->setMaximum(TotalBytes);
-    ui->clientProgressBar->setValue(byteWritten);
-
 
     return;
 
@@ -278,7 +277,7 @@ void tcpClientFileSend::updateClientProgress(qint64 numBytes)
 #endif
 
         bytesToWrite -= (int)tcpClient.write(outBlockFile);
-        ui->clientProgressBar->setValue(byteWritten);
+
 
 #ifdef DEBUG
         qDebug() <<"-->:bytesToWrite size:" << bytesToWrite;
@@ -295,10 +294,8 @@ void tcpClientFileSend::updateClientProgress(qint64 numBytes)
         sendDoneFlag = SEND_DONE;
     }
 
+    ui->clientStatusLabel->setText(str_china("传输中..."));
 
-
-    ui->clientStatusLabel->setText(str_china("已发送 %1MB")
-                                   .arg(byteWritten / (1024 *1024)));
 }
 
 void tcpClientFileSend::displayErr(QAbstractSocket::SocketError socketError)
@@ -310,7 +307,7 @@ void tcpClientFileSend::displayErr(QAbstractSocket::SocketError socketError)
                              .arg(tcpClient.errorString()));
 
     tcpClient.close();
-    ui->clientProgressBar->reset();
+
     ui->clientStatusLabel->setText(str_china("客户端就绪"));
     ui->startButton->setEnabled(true);
 
@@ -393,7 +390,7 @@ void tcpClientFileSend::ShutDownAll()
 
     deleteImgs();
 
-    ui->clientProgressBar->reset();
+
     ui->clientStatusLabel->setText(str_china("客户端就绪"));
     ui->startButton->setEnabled(true);
     close();
@@ -466,3 +463,17 @@ void tcpClientFileSend::PrintInfoToFile(QString str)
     }
 }
 
+QString tcpClientFileSend::GetVersion(void)
+{
+    return str_china("桌面传输系统")
+            +"\n"
+            +str_china("by小魏莱")
+            +"\n"
+            +version_filetransClient;
+}
+
+void tcpClientFileSend::aboutVer()
+{
+    QMessageBox::information(NULL, str_china("版本"), GetVersion(),NULL,NULL);
+    return;
+}

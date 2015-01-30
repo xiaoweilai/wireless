@@ -16,3 +16,5 @@ SOURCES += main.cpp\
 HEADERS  += tcpclientfilesend.h
 
 FORMS    += tcpclientfilesend.ui
+
+RC_FILE = logo.rc

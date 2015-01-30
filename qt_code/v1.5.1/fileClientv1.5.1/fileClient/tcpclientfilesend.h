@@ -54,6 +54,8 @@ public slots:
     void updateClientProgress(qint64 numBytes);
     void displayErr(QAbstractSocket::SocketError socketError);
     void openFile();
+    void aboutVer();//软件版本信息
+    QString GetVersion(void);
     QImage grabframeGeometry();
     QImage grabDeskScreen();
     void ShutDownAll();

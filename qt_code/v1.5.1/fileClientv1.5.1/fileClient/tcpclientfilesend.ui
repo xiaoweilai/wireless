@@ -11,17 +11,23 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>tcpClientFileSend</string>
+   <string>桌面传输系统</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QPushButton" name="startButton">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>180</y>
-      <width>101</width>
-      <height>61</height>
+      <x>60</x>
+      <y>220</y>
+      <width>131</width>
+      <height>71</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>宋体</family>
+      <pointsize>20</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>开始</string>
@@ -30,11 +36,17 @@
    <widget class="QPushButton" name="quitButton">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>180</y>
-      <width>101</width>
-      <height>61</height>
+      <x>380</x>
+      <y>220</y>
+      <width>121</width>
+      <height>71</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>宋体</family>
+      <pointsize>20</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>退出</string>
@@ -43,109 +55,128 @@
    <widget class="QPushButton" name="openButton">
     <property name="geometry">
      <rect>
-      <x>440</x>
+      <x>340</x>
       <y>70</y>
-      <width>81</width>
-      <height>40</height>
+      <width>91</width>
+      <height>51</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>宋体</family>
+      <pointsize>20</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>连接</string>
     </property>
    </widget>
-   <widget class="QProgressBar" name="clientProgressBar">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>130</y>
-      <width>390</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>0</number>
-    </property>
-   </widget>
    <widget class="QLabel" name="clientStatusLabel">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>270</y>
+      <x>60</x>
+      <y>310</y>
       <width>371</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>宋体</family>
+      <pointsize>20</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>客户端就绪</string>
     </property>
    </widget>
-   <widget class="QLabel" name="labelRate">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>320</y>
-      <width>361</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="lineEditHost">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>50</x>
       <y>70</y>
-      <width>221</width>
+      <width>261</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>宋体</family>
+      <pointsize>20</pointsize>
+     </font>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>40</y>
-      <width>41</width>
-      <height>21</height>
+      <x>50</x>
+      <y>30</y>
+      <width>241</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>宋体</family>
+      <pointsize>20</pointsize>
+     </font>
     </property>
     <property name="text">
-     <string>主机</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditPort">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>70</y>
-      <width>91</width>
-      <height>41</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>40</y>
-      <width>31</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>端口</string>
+     <string>请输入服务器IP：</string>
     </property>
    </widget>
    <widget class="QComboBox" name="comboBox_grabScreenSize">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>180</y>
-      <width>161</width>
+      <x>240</x>
+      <y>130</y>
+      <width>231</width>
       <height>51</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>宋体</family>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushbtn_about">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>220</y>
+      <width>111</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>宋体</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>关于</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="clientStatusLabel_2">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>140</y>
+      <width>181</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>宋体</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>请选择分辨率：</string>
     </property>
    </widget>
   </widget>
