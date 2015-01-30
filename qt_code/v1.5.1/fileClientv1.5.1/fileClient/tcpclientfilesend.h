@@ -50,6 +50,7 @@ public:
 public slots:
     void start();
     void startTransfer();
+    void parseImage();
     void updateClientProgress(qint64 numBytes);
     void displayErr(QAbstractSocket::SocketError socketError);
     void openFile();
@@ -78,6 +79,22 @@ private:
     QImage fileImage;
     quint64 picNametime;
     QBuffer buffer;
+
+    QString dirname;//文件夹名称
+    quint64 jpgnameNo;
+    double time_total;//耗时时间
+    QList<QString> namelst; //保存文件名列表
+    QList<quint32> sizelst; //保存文件大小列表
+    QByteArray outBlockFile;//文件字节序列
+    quint8 sendDoneFlag;//发送结束标志
+    enum{
+        SEND_DONE = 0,
+        SEND_ING,
+        SEND_UNKOWN
+    };
+
+signals:
+    void emitImgZeroSignal();//当namelst为空时，发送信号调用parseImage();
 };
 
 #endif // TCPCLIENTFILESEND_H

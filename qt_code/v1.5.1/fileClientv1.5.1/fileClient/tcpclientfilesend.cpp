@@ -14,6 +14,7 @@
 #define DDbg
 #endif
 
+#define TIMETEST /* 耗时测试 */
 
 #if 1
 //编码汉字
@@ -46,20 +47,26 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     TotalBytes = 0;
     byteWritten = 0;
 
+    jpgnameNo = 1; //图片名称计数
+    time_total = 0.0;//耗时时间
+    namelst.clear();//保存的文件名列表
+    sizelst.clear();//保存的文件大小列表
+    sendDoneFlag = SEND_DONE;//发送结束标志
+
     ui->startButton->setEnabled(false);
     ui->lineEditHost->setText(ReadIpAddr());
     ui->lineEditPort->setText(DEFAULT_PORT);
 
     QStringList screensize;
     screensize.clear();
-    screensize <<"gemetory size"
+    screensize <<"gemetory size"  //0
               <<"800 X 600"
              <<"1024 X 768"
             <<"fullscreen";
     ui->comboBox_grabScreenSize->addItems(screensize);
-    ui->comboBox_grabScreenSize->setCurrentIndex(1);//"800 X 600"
+    ui->comboBox_grabScreenSize->setCurrentIndex(3);//"800 X 600"
 
-    QString dirname = QString("images");
+    dirname = QString("images");
     QDir dir(QDir::currentPath());
     if(!dir.exists(dirname))
     {
@@ -76,6 +83,16 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
             SLOT(updateClientProgress(qint64)));
     connect(&tcpClient,SIGNAL(error(QAbstractSocket::SocketError)),this,
             SLOT(displayErr(QAbstractSocket::SocketError)));
+
+    timer = new QTimer(this);
+    connect(timer,SIGNAL(timeout()),this,
+            SLOT(startTransfer()));
+//    connect(timer,SIGNAL(timeout()),this,
+//            SLOT(parseImage));
+
+    connect(this,SIGNAL(emitImgZeroSignal()),this,
+            SLOT(parseImage()));
+
 
 }
 
@@ -109,15 +126,157 @@ startTransfer()槽函数。
  */
 void tcpClientFileSend::startTransfer()
 {
+#ifdef TIMETEST /* */
+    QTime time;
+    time.start(); //开始计时，以ms为单位
+
+#endif
+
+    timer->start(10);
     SaveIpAddr(ui->lineEditHost->text());
+
+    if(namelst.count() > 6)
+    {
+        emit emitImgZeroSignal();
+        return;
+    }
+
 
     fileImage = grabframeGeometry();
 
     //    fileImage =fileImage.convertToFormat(QImage::Format_Indexed8,Qt::AutoColor);
 
+    QString fileName = QString("%1/%2.jpg").arg(dirname)
+            .arg(jpgnameNo++);
+    qDebug() << "filename:" << fileName;
+    namelst.append(fileName);
 
-    buffer.reset();
+#if 0 //获取文件大小，太慢了
+    QBuffer buffertmp;
+    qint64 ImgBytes;
+    fileImage.save(&buffertmp,STREAM_PIC_FORT);
+    ImgBytes = (qint64)buffertmp.data().size();
+    qDebug() << "filesize:" << ImgBytes;
+    sizelst.append(ImgBytes);
+#endif
+
+    fileImage.save(fileName,STREAM_PIC_FORT);
+
+#ifdef TIMETEST /* */
+
+    int time_Diff = time.elapsed(); //返回从上次start()或restart()开始以来的时间差，单位ms
+    //以下方法是将ms转为s
+    float f = time_Diff / 1000.0;
+    time_total += f;
+
+    qDebug() << "save  elaspe:" <<time_Diff <<"ms";
+    qDebug() << "current time:" <<time_total <<"s";
+
+#if 0
+    static int usedflag = 0;
+    if( 0 == usedflag)
+    {
+        parseImage();
+        usedflag = 1;
+    }
+#else
+//    parseImage();
+    emit emitImgZeroSignal();
+#endif
+
+#endif
+    return;
+}
+
+void tcpClientFileSend::parseImage()
+{
+
+    if(namelst.count() == 0)
+    {
+        qDebug() << "namelst count is 0!!";
+//        emit emitImgZeroSignal();
+        return;
+    }
+    qDebug() << "namelst count:" << namelst.count();
+//    if(namelst.count() > 100)
+//    {
+//        emit emitImgZeroSignal();
+//    }
+    if(SEND_ING == sendDoneFlag)
+        return;
+
+    sendDoneFlag = SEND_ING;
+
     outBlock.resize(0);
+    QString readFname = namelst.at(0);
+    qDebug() << "read file name:" << readFname;
+    namelst.removeAt(0);
+    qDebug() << "after delete namelst count:" << namelst.count();
+
+    QDir dir(QDir::currentPath());
+    if(!dir.exists(dirname))
+    {
+        dir.mkdir(dirname);
+    }
+
+    QFile file(readFname);
+    if(!file.open(QIODevice::ReadOnly)) {
+        qDebug()<<"Can't open the file!"<<readFname;
+    }
+
+/*---------------------------------------
+发送文件数据格式 ：
+
+1.总长度 (8bytes) -- 总字节(文件大小 + 8字节 + 文件名)
+2.文件名长度(qint64() 8Bytes)
+3.文件名
+---------------------------------------*/
+
+
+    outBlockFile = file.readAll();
+    qDebug() <<"read file size:" << outBlockFile.size() ;
+
+    TotalBytes = outBlockFile.size();
+
+
+
+    outBlock.resize(0);
+    QDataStream sendOut(&outBlock, QIODevice::WriteOnly);
+    sendOut.resetStatus();
+    sendOut.setVersion(QDataStream::Qt_4_0);
+
+    //发送文件名称
+    sendOut <<qint64(0) <<qint64(0) <<readFname;
+    //TotalBytes为总数据长度，即（数据量长度+文件名长度+文件名）
+    TotalBytes += outBlock.size(); //加上图片名称长度
+    sendOut.device()->seek(0);
+
+    //总字节(文件大小 + 8字节 + 文件名) ，
+    sendOut << TotalBytes << qint64((outBlock.size() - sizeof(qint64)*2));
+
+    bytesToWrite = TotalBytes - tcpClient.write(outBlock);//将名称发出后，剩余图片大小
+    ui->clientStatusLabel->setText(str_china("已连接"));
+#ifdef DEBUG
+    qDebug() << "TotalBytes:" << TotalBytes;
+#endif
+//    outBlock.resize(0);
+
+
+
+
+
+    file.close();
+    dir.remove(readFname);//删除文件
+
+    ui->clientProgressBar->setMaximum(TotalBytes);
+    ui->clientProgressBar->setValue(byteWritten);
+
+
+    return;
+
+
+#if 0
+    //读取图片
 #if 0
     QImageWriter writer(&buffer, STREAM_PIC_FORT);
 
@@ -180,32 +339,40 @@ void tcpClientFileSend::startTransfer()
 #ifdef DEBUG
     qDebug() << currentFile << TotalBytes;
 #endif
-    outBlock.resize(0);
+//    outBlock.resize(0);
+
+#endif
 
 }
 
 void tcpClientFileSend::updateClientProgress(qint64 numBytes)
 {
+
 #ifdef DEBUG
     DDbg() << "numBytes:--------->>"<<numBytes;
 #endif
     byteWritten += (int)numBytes;
     if(bytesToWrite > 0)
     {
-        outBlock =  buffer.data();
-        bytesToWrite -= (int)tcpClient.write(outBlock);
-        outBlock.resize(0);
+        qDebug() <<"-->:outBlockFile size:" << outBlockFile.size();
+//        outBlock =  buffer.data();
+        bytesToWrite -= (int)tcpClient.write(outBlockFile);
+//        outBlock.resize(0);
+        ui->clientProgressBar->setValue(byteWritten);
+        qDebug() <<"-->:bytesToWrite size:" << bytesToWrite;
     }
     else
     {
+        qDebug() << "-->: send image done!!";
         picNametime++;
         TotalBytes = 0;
         byteWritten = 0;
-        startTransfer();
+//        parseImage();
+        sendDoneFlag = SEND_DONE;
     }
 
-    ui->clientProgressBar->setMaximum(TotalBytes);
-    ui->clientProgressBar->setValue(byteWritten);
+
+
     ui->clientStatusLabel->setText(str_china("已发送 %1MB")
                                    .arg(byteWritten / (1024 *1024)));
 }
