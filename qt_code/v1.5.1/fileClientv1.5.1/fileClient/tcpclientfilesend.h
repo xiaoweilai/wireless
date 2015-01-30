@@ -61,6 +61,9 @@ public slots:
     void SaveIpAddr(QString ipaddr);
     void PrintInfoToFile(QString str);
 
+private:
+    void deleteImgs(); //关闭后删除文件夹
+
 
 private:
     Ui::tcpClientFileSend *ui;

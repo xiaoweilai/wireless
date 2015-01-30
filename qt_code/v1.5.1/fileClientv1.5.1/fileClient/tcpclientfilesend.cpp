@@ -363,12 +363,35 @@ QImage tcpClientFileSend::grabframeGeometry()
 
 }
 
+void tcpClientFileSend::deleteImgs()
+{
+    QDir dir(QDir::currentPath());
+    if(!dir.exists(dirname))
+    {
+        dir.mkdir(dirname);
+    }
+
+
+    for(int i=0;i <namelst.count();i++)
+    {
+#ifdef DEBUG
+        qDebug() <<"remove filename:"<<namelst.at(i);
+#endif
+        dir.remove(namelst.at(i));
+    }
+    dir.remove(dirname);
+}
+
 void tcpClientFileSend::ShutDownAll()
 {
+    timer->stop();
+
     byteWritten = 0;
     tcpClient.disconnectFromHost();
     tcpClient.waitForDisconnected(5000);
     tcpClient.close();
+
+    deleteImgs();
 
     ui->clientProgressBar->reset();
     ui->clientStatusLabel->setText(str_china("¿Í»§¶Ë¾ÍÐ÷"));
