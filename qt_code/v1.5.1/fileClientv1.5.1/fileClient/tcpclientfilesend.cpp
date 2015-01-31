@@ -51,14 +51,15 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
 
     ui->startButton->setEnabled(false);
     ui->lineEditHost->setText(ReadIpAddr());
-//    ui->lineEditPort->setText(DEFAULT_PORT);
+    //    ui->lineEditPort->setText(DEFAULT_PORT);
 
     QStringList screensize;
     screensize.clear();
     screensize <<"gemetory size"  //0
               <<"800 X 600"
              <<"1024 X 768"
-            <<"fullscreen";
+            <<"1366 X 768"
+           <<"fullscreen";
     ui->comboBox_grabScreenSize->addItems(screensize);
     ui->comboBox_grabScreenSize->setCurrentIndex(3);//"800 X 600"
 
@@ -111,9 +112,15 @@ void tcpClientFileSend::start()
     ui->clientStatusLabel->setText(str_china("连接中..."));
     tcpClient.connectToHost(ui->lineEditHost->text(),
                             QString(DEFAULT_PORT).toInt());
-
     tcpClient.setSocketOption(QAbstractSocket::LowDelayOption, 1);//优化为最低延迟，后面的1代码启用该优化。
 
+    //waitForConnected()等待连接知道超过最大等待时间。如果连接建立函数返回true；否则返回false。
+    //当返回false时可以调用error来确定无法连接的原因
+    if(!tcpClient.waitForConnected(3000))
+    {
+        qDebug() <<"Error: "<<tcpClient.errorString();
+        displayErr(QAbstractSocket::SocketTimeoutError);
+    }
 }
 
 /* 一旦连接建立成功，QTcpSocket类将发出connected消息，继而调用
@@ -127,7 +134,7 @@ void tcpClientFileSend::startTransfer()
 
 #endif /* 耗时测试 */
 
-//    ui->clientStatusLabel->setText(str_china("连接成功"));
+    //    ui->clientStatusLabel->setText(str_china("连接成功"));
 
     timer->start(10);
     SaveIpAddr(ui->lineEditHost->text());
@@ -310,7 +317,7 @@ void tcpClientFileSend::displayErr(QAbstractSocket::SocketError socketError)
 
     ui->clientStatusLabel->setText(str_china("客户端就绪"));
     ui->startButton->setEnabled(true);
-
+    deleteImgs();
 #ifdef SHOWCURSOR
     QApplication::restoreOverrideCursor();
 #endif
@@ -349,6 +356,14 @@ QImage tcpClientFileSend::grabframeGeometry()
     {
         return grabDeskScreen();
     }
+    else if(ui->comboBox_grabScreenSize->currentText().contains("1366"))
+    {
+        return QPixmap::grabWindow(QApplication::desktop()->winId(),
+                                   0,
+                                   0,
+                                   1366,
+                                   768).toImage();
+    }
     else
     {
         return QPixmap::grabWindow(QApplication::desktop()->winId(),
@@ -376,7 +391,7 @@ void tcpClientFileSend::deleteImgs()
 #endif
         dir.remove(namelst.at(i));
     }
-    dir.remove(dirname);
+//    dir.remove(dirname);
 }
 
 void tcpClientFileSend::ShutDownAll()
