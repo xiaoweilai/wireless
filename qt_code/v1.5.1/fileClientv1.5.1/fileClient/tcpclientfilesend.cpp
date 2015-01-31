@@ -89,6 +89,8 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     connect(this,SIGNAL(emitImgZeroSignal()),this,
             SLOT(parseImage()));
 
+    connect(qApp,SIGNAL(lastWindowClosed()),this,SLOT(ShutDownAll()));
+
 }
 
 tcpClientFileSend::~tcpClientFileSend()
@@ -139,7 +141,7 @@ void tcpClientFileSend::startTransfer()
     timer->start(10);
     SaveIpAddr(ui->lineEditHost->text());
 
-    if(namelst.count() > 1)
+    if(namelst.count() > 2)
     {
         emit emitImgZeroSignal();
         return;
@@ -222,6 +224,7 @@ void tcpClientFileSend::parseImage()
 #ifdef DEBUG
         qDebug()<<"Can't open the file!"<<readFname;
 #endif
+        return;
     }
 
     /*---------------------------------------
@@ -318,6 +321,7 @@ void tcpClientFileSend::displayErr(QAbstractSocket::SocketError socketError)
     ui->clientStatusLabel->setText(str_china("¿Í»§¶Ë¾ÍÐ÷"));
     ui->startButton->setEnabled(true);
     deleteImgs();
+    namelst.clear();
 #ifdef SHOWCURSOR
     QApplication::restoreOverrideCursor();
 #endif
