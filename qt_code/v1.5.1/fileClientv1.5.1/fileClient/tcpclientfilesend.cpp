@@ -48,6 +48,7 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     namelst.clear();//保存的文件名列表
     sizelst.clear();//保存的文件大小列表
     sendDoneFlag = SEND_DONE;//发送结束标志
+    emitSigNums = 0;//发送信号的次数
 
     ui->startButton->setEnabled(false);
     ui->lineEditHost->setText(ReadIpAddr());
@@ -138,15 +139,23 @@ void tcpClientFileSend::startTransfer()
 
     //    ui->clientStatusLabel->setText(str_china("连接成功"));
 
-    timer->start(10);
+    timer->start(100);
     SaveIpAddr(ui->lineEditHost->text());
 
     if(namelst.count() > 2)
     {
-        emit emitImgZeroSignal();
+//        if(emitSigNums > 200)
+//        {
+
+//            emit emitImgZeroSignal();
+
+//        }
+//        emitSigNums++;
+//        qDebug() << "emitSigNums:" <<emitSigNums;
         return;
     }
 
+    emitSigNums = 0;//发送信号归零
 
     fileImage = grabframeGeometry();
 
@@ -302,6 +311,7 @@ void tcpClientFileSend::updateClientProgress(qint64 numBytes)
         TotalBytes = 0;
         byteWritten = 0;
         sendDoneFlag = SEND_DONE;
+        parseImage();
     }
 
     ui->clientStatusLabel->setText(str_china("传输中..."));
@@ -432,6 +442,10 @@ QString tcpClientFileSend::ReadIpAddr()
         qDebug() << "read ip:" << dataFromFile;
 #endif
         ipaddr = QString(dataFromFile);
+        if(!ipaddr.contains("192.168.1"))
+        {
+            return QString(DEFAULT_HOSTADDR);
+        }
 
 #ifdef DEBUG
         qDebug() << "ipaddr :" << ipaddr;

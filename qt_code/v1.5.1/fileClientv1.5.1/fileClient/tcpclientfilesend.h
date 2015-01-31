@@ -98,6 +98,8 @@ private:
         SEND_UNKOWN
     };
 
+    quint8 emitSigNums;//发送信号的次数
+
 signals:
     void emitImgZeroSignal();//当namelst为空时，发送信号调用parseImage();
 };
