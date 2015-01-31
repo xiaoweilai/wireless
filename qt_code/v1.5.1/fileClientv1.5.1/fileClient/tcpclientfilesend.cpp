@@ -6,8 +6,8 @@
 #include <windows.h>
 #include <QIODevice>
 
-//#define DEBUG    /* 调试信息 */
-//#define TIMETEST /* 耗时测试 */
+#define DEBUG    /* 调试信息 */
+#define TIMETEST /* 耗时测试 */
 
 const char version_filetransClient[]="v1.0";
 
@@ -139,7 +139,7 @@ void tcpClientFileSend::startTransfer()
     timer->start(10);
     SaveIpAddr(ui->lineEditHost->text());
 
-    if(namelst.count() > 2)
+    if(namelst.count() > 1)
     {
         emit emitImgZeroSignal();
         return;
