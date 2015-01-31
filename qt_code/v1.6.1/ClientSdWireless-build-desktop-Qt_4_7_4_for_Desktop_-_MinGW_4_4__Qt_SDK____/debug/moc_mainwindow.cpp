@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sat Jan 24 02:08:17 2015
+** Created: Tue Jan 20 00:03:43 2015
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,43 +23,27 @@ static const uint qt_meta_data_MainWindow[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-      14,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       2,       // signalCount
-
- // signals: signature, parameters, type, tag, flags
-      12,   11,   11,   11, 0x05,
-      31,   11,   11,   11, 0x05,
+       0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      45,   11,   11,   11, 0x08,
+      12,   11,   11,   11, 0x08,
+      34,   11,   11,   11, 0x08,
+      53,   11,   11,   11, 0x08,
       67,   11,   11,   11, 0x08,
-      86,   11,   11,   11, 0x08,
-     100,   11,   11,   11, 0x08,
-     114,   11,   11,   11, 0x08,
-     127,   11,   11,   11, 0x08,
-     143,   11,   11,   11, 0x08,
-     169,  157,   11,   11, 0x08,
-     210,   11,   11,   11, 0x08,
-     225,   11,   11,   11, 0x08,
-     248,  239,   11,   11, 0x08,
-     277,   11,   11,   11, 0x08,
+      81,   11,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0\0removelistonesig()\0"
-    "transfersig()\0receiveMsgBoxSignal()\0"
+    "MainWindow\0\0receiveMsgBoxSignal()\0"
     "grabScreenSignal()\0startActive()\0"
-    "pauseActive()\0quitActive()\0startTransfer()\0"
-    "transferjpg()\0socketError\0"
-    "displayErr(QAbstractSocket::SocketError)\0"
-    "startConnect()\0stopConnect()\0numBytes\0"
-    "updateClientProgress(qint64)\0removelist()\0"
+    "pauseActive()\0quitActive()\0"
 };
 
 const QMetaObject MainWindow::staticMetaObject = {
@@ -91,36 +75,15 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: removelistonesig(); break;
-        case 1: transfersig(); break;
-        case 2: receiveMsgBoxSignal(); break;
-        case 3: grabScreenSignal(); break;
-        case 4: startActive(); break;
-        case 5: pauseActive(); break;
-        case 6: quitActive(); break;
-        case 7: startTransfer(); break;
-        case 8: transferjpg(); break;
-        case 9: displayErr((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
-        case 10: startConnect(); break;
-        case 11: stopConnect(); break;
-        case 12: updateClientProgress((*reinterpret_cast< qint64(*)>(_a[1]))); break;
-        case 13: removelist(); break;
+        case 0: receiveMsgBoxSignal(); break;
+        case 1: grabScreenSignal(); break;
+        case 2: startActive(); break;
+        case 3: pauseActive(); break;
+        case 4: quitActive(); break;
         default: ;
         }
-        _id -= 14;
+        _id -= 5;
     }
     return _id;
-}
-
-// SIGNAL 0
-void MainWindow::removelistonesig()
-{
-    QMetaObject::activate(this, &staticMetaObject, 0, 0);
-}
-
-// SIGNAL 1
-void MainWindow::transfersig()
-{
-    QMetaObject::activate(this, &staticMetaObject, 1, 0);
 }
 QT_END_MOC_NAMESPACE
