@@ -30,12 +30,11 @@ import android.widget.TextView;
 public class MainActivity extends Activity implements View.OnClickListener{
 
 	ImageView mImgLcd;
-	Context mContext;
+	public static Context mContext;
 	Resources mRes;
 	private byte[] mGetByteMessage;
 	private byte[] mGetImageNameByte;
 	private int mByteLong;
-	private boolean mFirstConn = true;
 	private int mCurImageSize = 0;
 	private int mCurImageNameLength = 0;
 	Socket mSocket;
@@ -49,6 +48,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	private String mIpAddress;
 	private String mIpAddressInfo;
 	private RelativeLayout mRelMain;
+	private MyAPP mAPP = null; 
+	private Thread receiveImag;
 	
 	@SuppressLint("NewApi")
 	@Override
@@ -57,6 +58,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		setContentView(R.layout.activity_main);
 		mContext = MainActivity.this;
 		mRes = mContext.getResources();
+//		mAPP = (MyAPP)getApplication();
+//		mAPP.setHandler(mHandler);
 		PublicFunction.getScreenWithAndHeight(mContext);
 		mImgLcd = (ImageView)findViewById(R.id.img_lcd);
 		mImgLcd.setImageResource(R.drawable.angelababy);
@@ -80,8 +83,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			SocketServer();
 		}catch(Throwable e){
 			e.printStackTrace();
-			System.out.println("SocketServer Throwable");
-			SocketServer();
+			System.out.println("SocketServer Th rowable");
+			mHandler.sendEmptyMessage(6);
+ 			receiveImag.interrupt();
 		} finally{
 			
 		}				
@@ -92,7 +96,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		setIpAddress();
 		super.onResume();
 	}
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -120,31 +123,15 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		mByteLong = 0;
 		mCurImageSize = 0;
 		mCurImageNameLength = 0;
+		mHandler.sendEmptyMessage(5);
+		mReceiveSuccessedFlag = false;
 		if(mIpAddress != null){
-			Thread receiveImag = new Thread(run);
+			receiveImag = new Thread(run);
 			receiveImag.start();
 		}
 	}
 	
-	Handler mHandler = new Handler(){
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			if(msg.what == 1){
-				mImgBitmapShow = PublicFunction.bytesToBimap(mGetByteMessage);
-				if(mImgBitmapShow != null){
-					mImgLcd.setImageBitmap(mImgBitmapShow);
-				}
-			} else if(msg.what == 2){
-				setIpAddress();
-			} else if(msg.what == 3){
-				mTextIPAddress.setVisibility(View.GONE);
-			}
-		}
-		
-	};
-	
+	MyHandler mHandler = new MyHandler();
 	
 	private void setIpAddress(){
 		mIpAddressInfo = mRes.getString(R.string.ipaddress);
@@ -160,8 +147,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		}
    		 
    		 if(mIpAddress != null){
-   				mTextIPAddress.setText(mIpAddressInfo);
+   			 mHandler.removeMessages(7);
+   			 mTextIPAddress.setText(mIpAddressInfo);
 		} else {
+			mHandler.sendEmptyMessageDelayed(7, 1000);
 			mTextIPAddress.setText("未获取正确的IP地址，请检查后在查看。");
 		}	
 	}
@@ -172,36 +161,58 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			 ServerSocket ss = null;
 	         try {
 	        	 mHandler.sendEmptyMessage(2);
-	        	 if(mIpAddress != null){
-					 ss = new ServerSocket();
-		        	 ss.bind(new InetSocketAddress(mIpAddress,16689)); 
-	
-			         //服务器接收到客户端的数据后，创建与此客户端对话的Socket
-		        	 mSocket = ss.accept();
-		        	 mHandler.sendEmptyMessage(3);
-			         //用于向客户端发送数据的输出流
-			         mDos = new DataOutputStream(mSocket.getOutputStream());
-			         //用于接收客户端发来的数据的输入流
-			         mDis = new DataInputStream(mSocket.getInputStream());
-			         while(!mReceiveSuccessedFlag){
-			        	dealSocket();					
-			         }
+				 ss = new ServerSocket();
+	        	 ss.bind(new InetSocketAddress(mIpAddress,16689)); 
+
+		         //服务器接收到客户端的数据后，创建与此客户端对话的Socket
+	        	 mSocket = ss.accept();
+	        	 mHandler.sendEmptyMessage(3);
+		         //用于向客户端发送数据的输出流
+		         mDos = new DataOutputStream(mSocket.getOutputStream());
+		         //用于接收客户端发来的数据的输入流
+		         mDis = new DataInputStream(mSocket.getInputStream());
+		         while(!mReceiveSuccessedFlag){
+		        	 try{ 
+			        	 mSocket.sendUrgentData(0xFF); 
+			        	 }catch(Exception ex){ 
+			        		 System.out.println("线程连接异常  mReceiveSuccessedFlag" + Thread.currentThread().getName());
+			        		 try {
+			     				if (null != mDis)
+			     					mDis.close();
+			     				if (null != mDos)
+			     					mDos.close();
+			     				if (null != ss){
+			     					ss.close();
+			     				}
+			     			} catch (IOException ee) {
+			     				ee.printStackTrace();
+			     			}
+			     			mHandler.sendEmptyMessage(6);
+			     			receiveImag.interrupt();
+			     			receiveImag = null;
+			     			mReceiveSuccessedFlag = true;
+			     			break;
+			        	 }
+		        	 receiveMessage(mDis,mSocket,mDos);
 	        	 }
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				SocketServer();
+				if(!mReceiveSuccessedFlag){
+					System.out.println("线程连接异常   run " + Thread.currentThread().getName());
+					mHandler.sendEmptyMessage(6);
+	     			receiveImag.interrupt();
+				}
 			}
 			
 		}
 	};
 
 	
-public void receiveMessage(DataInputStream input, Socket s, DataOutputStream output){
+public void receiveMessage(DataInputStream input, Socket s, DataOutputStream output) throws SocketException{
 		
 		int numRead = 0;
 		try {
-			
 			int tempBytelength = input.available();
 			if(!mReceiveSuccessedBeforeFourByteFlag){
 	            if(tempBytelength >= 100){
@@ -238,7 +249,7 @@ public void receiveMessage(DataInputStream input, Socket s, DataOutputStream out
 			Log.writeErroLogToFile("socket input output异常"
 					+ Thread.currentThread().getName());
 				Log.writeErroLogToFile("线程连接异常" + Thread.currentThread().getName());
-				System.out.println("线程连接异常" + Thread.currentThread().getName());
+				System.out.println("线程连接异常  receiveMessage" + Thread.currentThread().getName());
 			
 			try {
 				if (null != input)
@@ -250,16 +261,10 @@ public void receiveMessage(DataInputStream input, Socket s, DataOutputStream out
 			} catch (IOException ee) {
 				ee.printStackTrace();
 			}
-			SocketServer();
-		}
+			mHandler.sendEmptyMessage(6);
+ 			receiveImag.interrupt();
+		} 
 	}
-
-		public void dealSocket() {
-			if(mFirstConn){
-				receiveMessage(mDis,mSocket,mDos);
-			}
-		}
-
 		
 		@Override
 		public void finish() {
@@ -267,7 +272,34 @@ public void receiveMessage(DataInputStream input, Socket s, DataOutputStream out
 			android.os.Process.killProcess(android.os.Process.myPid());
 		}
 
-		@SuppressLint("NewApi")
+		/** 
+	     * 自己实现 Handler 处理消息更新UI 
+	     *  
+	     * @author mark 
+	     */  
+	    final class MyHandler extends Handler {  
+	        @Override  
+	        public void handleMessage(Message msg) {  
+	            super.handleMessage(msg);  
+	            if(msg.what == 1){
+					mImgBitmapShow = PublicFunction.bytesToBimap(mGetByteMessage);
+					if(mImgBitmapShow != null){
+						mImgLcd.setImageBitmap(mImgBitmapShow);
+					}
+				} else if(msg.what == 2){
+					setIpAddress();
+				} else if(msg.what == 3){
+					mTextIPAddress.setVisibility(View.GONE);
+				} else if(msg.what == 5){
+					mImgLcd.setImageResource(R.drawable.angelababy);
+				} else if(msg.what == 6){
+					 SocketServer();
+				}else if(msg.what == 7){
+					setIpAddress();
+					SocketServer();
+				}
+	        }  
+	}  
 		@Override
 		public void onClick(View v) {
 //			int i = mRelMain.getSystemUiVisibility();  
