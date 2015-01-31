@@ -63,7 +63,7 @@ private static int curImageIndex = 0;
 	            }  
 	        }  
 	    }  
-	    return "null";  
+	    return null;  
 	}
 	
 	public static int[] getScreenWithAndHeight(Context context){

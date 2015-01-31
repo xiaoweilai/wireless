@@ -5,21 +5,22 @@
     android:id="@+id/rel_main"
     tools:context=".MainActivity" >
 
-     <!-- <ImageView 
+      <ImageView 
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:scaleType="fitXY"
 	    android:id="@+id/img_lcd"
-	    /> -->
-	<ImageView 
+	    />
+	<!--<ImageView 
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/img_lcd"
-	    />
+	    /> -->
 	 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ip_address"
-        android:text="@string/hello_world" />
+        android:textSize="35sp"
+/>
 </RelativeLayout>
