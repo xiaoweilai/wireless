@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'tcpclientfilesend.ui'
 **
-** Created: Sat Jan 31 01:57:00 2015
+** Created: Tue Feb 3 23:23:41 2015
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -29,7 +29,7 @@ class Ui_tcpClientFileSend
 public:
     QWidget *centralWidget;
     QPushButton *startButton;
-    QPushButton *quitButton;
+    QPushButton *pauseButton;
     QPushButton *openButton;
     QLabel *clientStatusLabel;
     QLineEdit *lineEditHost;
@@ -47,15 +47,15 @@ public:
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         startButton = new QPushButton(centralWidget);
         startButton->setObjectName(QString::fromUtf8("startButton"));
-        startButton->setGeometry(QRect(60, 220, 131, 71));
+        startButton->setGeometry(QRect(60, 200, 131, 71));
         QFont font;
         font.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
         font.setPointSize(20);
         startButton->setFont(font);
-        quitButton = new QPushButton(centralWidget);
-        quitButton->setObjectName(QString::fromUtf8("quitButton"));
-        quitButton->setGeometry(QRect(380, 220, 121, 71));
-        quitButton->setFont(font);
+        pauseButton = new QPushButton(centralWidget);
+        pauseButton->setObjectName(QString::fromUtf8("pauseButton"));
+        pauseButton->setGeometry(QRect(220, 200, 121, 71));
+        pauseButton->setFont(font);
         openButton = new QPushButton(centralWidget);
         openButton->setObjectName(QString::fromUtf8("openButton"));
         openButton->setGeometry(QRect(340, 70, 91, 51));
@@ -81,7 +81,7 @@ public:
         comboBox_grabScreenSize->setFont(font1);
         pushbtn_about = new QPushButton(centralWidget);
         pushbtn_about->setObjectName(QString::fromUtf8("pushbtn_about"));
-        pushbtn_about->setGeometry(QRect(240, 220, 111, 71));
+        pushbtn_about->setGeometry(QRect(370, 200, 111, 71));
         pushbtn_about->setFont(font);
         clientStatusLabel_2 = new QLabel(centralWidget);
         clientStatusLabel_2->setObjectName(QString::fromUtf8("clientStatusLabel_2"));
@@ -98,7 +98,7 @@ public:
     {
         tcpClientFileSend->setWindowTitle(QApplication::translate("tcpClientFileSend", "\346\241\214\351\235\242\344\274\240\350\276\223\347\263\273\347\273\237", 0, QApplication::UnicodeUTF8));
         startButton->setText(QApplication::translate("tcpClientFileSend", "\345\274\200\345\247\213", 0, QApplication::UnicodeUTF8));
-        quitButton->setText(QApplication::translate("tcpClientFileSend", "\351\200\200\345\207\272", 0, QApplication::UnicodeUTF8));
+        pauseButton->setText(QApplication::translate("tcpClientFileSend", "\346\232\202\345\201\234", 0, QApplication::UnicodeUTF8));
         openButton->setText(QApplication::translate("tcpClientFileSend", "\350\277\236\346\216\245", 0, QApplication::UnicodeUTF8));
         clientStatusLabel->setText(QApplication::translate("tcpClientFileSend", "\345\256\242\346\210\267\347\253\257\345\260\261\347\273\252", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("tcpClientFileSend", "\350\257\267\350\276\223\345\205\245\346\234\215\345\212\241\345\231\250IP\357\274\232", 0, QApplication::UnicodeUTF8));

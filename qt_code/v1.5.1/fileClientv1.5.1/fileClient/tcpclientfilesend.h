@@ -49,6 +49,7 @@ public:
 
 public slots:
     void start();
+    void pause();//暂停
     void startTransfer();
     void parseImage();
     void updateClientProgress(qint64 numBytes);
@@ -70,7 +71,7 @@ private:
 private:
     Ui::tcpClientFileSend *ui;
 
-    QTcpSocket tcpClient;
+    QTcpSocket *p_tcpClient;
 
     qint64 TotalBytes;
     qint64 byteWritten;
@@ -99,6 +100,12 @@ private:
     };
 
     quint8 emitSigNums;//发送信号的次数
+    enum{
+        STATE_START = 0,
+        STATE_PAUSE,
+        STATE_UNKOWN
+    };
+    quint8 curstate;//目前定时器状态
 
 signals:
     void emitImgZeroSignal();//当namelst为空时，发送信号调用parseImage();
