@@ -179,6 +179,19 @@
      <string>请选择分辨率：</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="checkBox_speed">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>30</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>低速传输</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

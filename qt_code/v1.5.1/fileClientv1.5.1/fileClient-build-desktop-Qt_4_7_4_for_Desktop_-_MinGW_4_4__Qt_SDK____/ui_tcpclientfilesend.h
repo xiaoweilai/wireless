@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'tcpclientfilesend.ui'
 **
-** Created: Tue Feb 3 23:23:41 2015
+** Created: Wed Feb 4 20:58:24 2015
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -14,6 +14,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
@@ -37,6 +38,7 @@ public:
     QComboBox *comboBox_grabScreenSize;
     QPushButton *pushbtn_about;
     QLabel *clientStatusLabel_2;
+    QCheckBox *checkBox_speed;
 
     void setupUi(QMainWindow *tcpClientFileSend)
     {
@@ -87,6 +89,9 @@ public:
         clientStatusLabel_2->setObjectName(QString::fromUtf8("clientStatusLabel_2"));
         clientStatusLabel_2->setGeometry(QRect(50, 140, 181, 31));
         clientStatusLabel_2->setFont(font);
+        checkBox_speed = new QCheckBox(centralWidget);
+        checkBox_speed->setObjectName(QString::fromUtf8("checkBox_speed"));
+        checkBox_speed->setGeometry(QRect(370, 30, 71, 16));
         tcpClientFileSend->setCentralWidget(centralWidget);
 
         retranslateUi(tcpClientFileSend);
@@ -104,6 +109,7 @@ public:
         label->setText(QApplication::translate("tcpClientFileSend", "\350\257\267\350\276\223\345\205\245\346\234\215\345\212\241\345\231\250IP\357\274\232", 0, QApplication::UnicodeUTF8));
         pushbtn_about->setText(QApplication::translate("tcpClientFileSend", "\345\205\263\344\272\216", 0, QApplication::UnicodeUTF8));
         clientStatusLabel_2->setText(QApplication::translate("tcpClientFileSend", "\350\257\267\351\200\211\346\213\251\345\210\206\350\276\250\347\216\207\357\274\232", 0, QApplication::UnicodeUTF8));
+        checkBox_speed->setText(QApplication::translate("tcpClientFileSend", "\344\275\216\351\200\237\344\274\240\350\276\223", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

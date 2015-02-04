@@ -6,10 +6,10 @@
 #include <windows.h>
 #include <QIODevice>
 
-#define DEBUG    /* 调试信息 */
-#define TIMETEST /* 耗时测试 */
+//#define DEBUG    /* 调试信息 */
+//#define TIMETEST /* 耗时测试 */
 
-const char version_filetransClient[]="v1.1";
+const char version_filetransClient[]="v1.2";
 
 
 #if 1
@@ -58,6 +58,7 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     ui->pauseButton->setEnabled(false);
     ui->lineEditHost->setText(ReadIpAddr());
     //    ui->lineEditPort->setText(DEFAULT_PORT);
+    ui->checkBox_speed->setChecked(true);
 
     QStringList screensize;
     screensize.clear();
@@ -208,6 +209,13 @@ void tcpClientFileSend::startTransfer()
     emitSigNums = 0;//发送信号归零
 
     fileImage = grabframeGeometry();
+    if(ui->checkBox_speed->isChecked())
+    {
+        Sleep(100);
+    }else
+    {
+        Sleep(10);
+    }
 
     //    fileImage =fileImage.convertToFormat(QImage::Format_Indexed8,Qt::AutoColor);
 
