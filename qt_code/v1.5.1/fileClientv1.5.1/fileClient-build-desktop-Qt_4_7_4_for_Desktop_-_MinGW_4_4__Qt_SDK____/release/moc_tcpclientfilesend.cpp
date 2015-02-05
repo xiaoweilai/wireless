@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'tcpclientfilesend.h'
 **
-** Created: Tue Feb 3 23:32:05 2015
+** Created: Thu Feb 5 23:06:03 2015
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!

@@ -9,7 +9,7 @@
 //#define DEBUG    /* 调试信息 */
 //#define TIMETEST /* 耗时测试 */
 
-const char version_filetransClient[]="v1.2";
+const char version_filetransClient[]="v1.3";
 
 
 #if 1
@@ -22,8 +22,8 @@ const char version_filetransClient[]="v1.2";
 #endif
 
 #if 1
-#define DEFAULT_HOSTADDR "192.168.1.104"
-//#define DEFAULT_HOSTADDR "169.254.194.157"
+//#define DEFAULT_HOSTADDR "192.168.1.104"
+#define DEFAULT_HOSTADDR "169.254.194.157"
 #else
 #define DEFAULT_HOSTADDR "127.0.0.1"
 #endif
@@ -52,6 +52,8 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     emitSigNums = 0;//发送信号的次数
     curstate = STATE_PAUSE;//当前状态，开启或暂停
     p_tcpClient = NULL;//tcp socket
+    imgVecArray.clear();
+    imgLstArray.clear();
 
     ui->openButton->setEnabled(true);
     ui->startButton->setEnabled(false);
@@ -70,12 +72,12 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     ui->comboBox_grabScreenSize->addItems(screensize);
     ui->comboBox_grabScreenSize->setCurrentIndex(3);//"800 X 600"
 
-    dirname = QString("images");
-    QDir dir(QDir::currentPath());
-    if(!dir.exists(dirname))
-    {
-        dir.mkdir(dirname);
-    }
+//    dirname = QString("images");
+//    QDir dir(QDir::currentPath());
+//    if(!dir.exists(dirname))
+//    {
+//        dir.mkdir(dirname);
+//    }
 
     connect(ui->startButton,SIGNAL(clicked()),this,SLOT(start()));
     connect(ui->pauseButton,SIGNAL(clicked()),this,SLOT(pause()));
@@ -211,7 +213,7 @@ void tcpClientFileSend::startTransfer()
     fileImage = grabframeGeometry();
     if(ui->checkBox_speed->isChecked())
     {
-        Sleep(100);
+        Sleep(200);
     }else
     {
         Sleep(10);
@@ -228,7 +230,13 @@ void tcpClientFileSend::startTransfer()
 
     namelst.append(fileName);
 
-    fileImage.save(fileName,STREAM_PIC_FORT);
+//    fileImage.save(fileName,STREAM_PIC_FORT);
+    QByteArray bytearry;
+    QBuffer buffer;
+    buffer.setBuffer(&bytearry);
+    fileImage.save(&buffer,STREAM_PIC_FORT);
+    buffer.data();
+    imgVecArray.append(bytearry);
 
 #ifdef TIMETEST /* 耗时测试 */
 
@@ -279,19 +287,19 @@ void tcpClientFileSend::parseImage()
     qDebug() << "after delete namelst count:" << namelst.count();
 #endif
 
-    QDir dir(QDir::currentPath());
-    if(!dir.exists(dirname))
-    {
-        dir.mkdir(dirname);
-    }
+//    QDir dir(QDir::currentPath());
+//    if(!dir.exists(dirname))
+//    {
+//        dir.mkdir(dirname);
+//    }
 
-    QFile file(readFname);
-    if(!file.open(QIODevice::ReadOnly)) {
-#ifdef DEBUG
-        qDebug()<<"Can't open the file!"<<readFname;
-#endif
-        return;
-    }
+//    QFile file(readFname);
+//    if(!file.open(QIODevice::ReadOnly)) {
+//#ifdef DEBUG
+//        qDebug()<<"Can't open the file!"<<readFname;
+//#endif
+//        return;
+//    }
 
     /*---------------------------------------
 发送文件数据格式 ：
@@ -302,7 +310,9 @@ void tcpClientFileSend::parseImage()
 ---------------------------------------*/
 
 
-    outBlockFile = file.readAll();
+//    outBlockFile = file.readAll();
+    outBlockFile = imgVecArray.at(0);
+    imgVecArray.remove(0);
 #ifdef DEBUG
     qDebug() <<"read file size:" << outBlockFile.size() ;
 #endif
@@ -331,8 +341,8 @@ void tcpClientFileSend::parseImage()
     qDebug() << "TotalBytes:" << TotalBytes;
 #endif
 
-    file.close();
-    dir.remove(readFname);//删除文件
+//    file.close();
+//    dir.remove(readFname);//删除文件
 
 
     return;
@@ -487,21 +497,24 @@ QImage tcpClientFileSend::grabframeGeometry()
 
 void tcpClientFileSend::deleteImgs()
 {
-    QDir dir(QDir::currentPath());
-    if(!dir.exists(dirname))
-    {
-        dir.mkdir(dirname);
-    }
+//    QDir dir(QDir::currentPath());
+//    if(!dir.exists(dirname))
+//    {
+//        dir.mkdir(dirname);
+//    }
 
 
-    for(int i=0;i <namelst.count();i++)
-    {
-#ifdef DEBUG
-        qDebug() <<"remove filename:"<<namelst.at(i);
-#endif
-        dir.remove(namelst.at(i));
-    }
-    //    dir.remove(dirname);
+//    for(int i=0;i <namelst.count();i++)
+//    {
+//#ifdef DEBUG
+//        qDebug() <<"remove filename:"<<namelst.at(i);
+//#endif
+//        dir.remove(namelst.at(i));
+//    }
+//    //    dir.remove(dirname);
+
+    imgVecArray.clear();
+    imgLstArray.clear();
 }
 
 void tcpClientFileSend::ShutDownAll()
