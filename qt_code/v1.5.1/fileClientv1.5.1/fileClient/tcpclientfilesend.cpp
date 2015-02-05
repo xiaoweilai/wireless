@@ -22,8 +22,8 @@ const char version_filetransClient[]="v1.3";
 #endif
 
 #if 1
-//#define DEFAULT_HOSTADDR "192.168.1.104"
-#define DEFAULT_HOSTADDR "169.254.194.157"
+#define DEFAULT_HOSTADDR "192.168.1.104"
+//#define DEFAULT_HOSTADDR "169.254.194.157"
 #else
 #define DEFAULT_HOSTADDR "127.0.0.1"
 #endif
