@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'tcp_fileserver_recv.ui'
 **
-** Created: Sun Jan 11 10:45:25 2015
-**      by: Qt User Interface Compiler version 4.7.4
+** Created: Mon Feb 9 23:34:40 2015
+**      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -69,7 +69,7 @@ public:
         serverProgressBar->setValue(0);
         imageLabel = new QLabel(centralWidget);
         imageLabel->setObjectName(QString::fromUtf8("imageLabel"));
-        imageLabel->setGeometry(QRect(0, 40, 1366, 721));
+        imageLabel->setGeometry(QRect(0, 40, 1366, 768));
         lineEdit_ip = new QLineEdit(centralWidget);
         lineEdit_ip->setObjectName(QString::fromUtf8("lineEdit_ip"));
         lineEdit_ip->setGeometry(QRect(150, 10, 171, 21));
@@ -79,7 +79,7 @@ public:
         Tcp_FileServer_Recv->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(Tcp_FileServer_Recv);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1366, 23));
+        menuBar->setGeometry(QRect(0, 0, 1366, 19));
         Tcp_FileServer_Recv->setMenuBar(menuBar);
         mainToolBar = new QToolBar(Tcp_FileServer_Recv);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
