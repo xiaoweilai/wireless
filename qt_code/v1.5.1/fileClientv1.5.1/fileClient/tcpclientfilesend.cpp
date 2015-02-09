@@ -9,7 +9,7 @@
 //#define DEBUG    /* 调试信息 */
 //#define TIMETEST /* 耗时测试 */
 
-const char version_filetransClient[]="v1.3";
+const char version_filetransClient[]="v1.4";
 
 
 #if 1
@@ -58,6 +58,7 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     ui->openButton->setEnabled(true);
     ui->startButton->setEnabled(false);
     ui->pauseButton->setEnabled(false);
+    ui->disconnectButton->setEnabled(false);
     ui->lineEditHost->setText(ReadIpAddr());
     //    ui->lineEditPort->setText(DEFAULT_PORT);
     ui->checkBox_speed->setChecked(true);
@@ -72,17 +73,19 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     ui->comboBox_grabScreenSize->addItems(screensize);
     ui->comboBox_grabScreenSize->setCurrentIndex(3);//"800 X 600"
 
-//    dirname = QString("images");
-//    QDir dir(QDir::currentPath());
-//    if(!dir.exists(dirname))
-//    {
-//        dir.mkdir(dirname);
-//    }
+    //    dirname = QString("images");
+    //    QDir dir(QDir::currentPath());
+    //    if(!dir.exists(dirname))
+    //    {
+    //        dir.mkdir(dirname);
+    //    }
 
     connect(ui->startButton,SIGNAL(clicked()),this,SLOT(start()));
     connect(ui->pauseButton,SIGNAL(clicked()),this,SLOT(pause()));
     connect(ui->openButton,SIGNAL(clicked()),this,SLOT(openFile()));
     connect(ui->pushbtn_about,SIGNAL(clicked()),this,SLOT(aboutVer()));
+    connect(ui->disconnectButton,SIGNAL(clicked()),this,
+            SLOT(disconnectSocket()));
 
 
     timer = new QTimer(this);
@@ -116,6 +119,7 @@ void tcpClientFileSend::openFile()
             SLOT(updateClientProgress(qint64)));
     connect(p_tcpClient,SIGNAL(error(QAbstractSocket::SocketError)),this,
             SLOT(displayErr(QAbstractSocket::SocketError)));
+    ui->openButton->setEnabled(false);
 
 }
 
@@ -149,23 +153,26 @@ void tcpClientFileSend::start()
             p_tcpClient = NULL;
 
             QMessageBox::information(this,str_china("网络"),
-                                 str_china("产生如下错误：连接失败"));
+                                     str_china("产生如下错误：连接失败"));
         }
+        curstate = STATE_PAUSE;
         timer->stop();
 
-        curstate = STATE_PAUSE;
         ui->openButton->setEnabled(true);
         ui->startButton->setEnabled(false);
         ui->pauseButton->setEnabled(false);
-        ui->clientStatusLabel->setText(str_china("连接失败，请输入正确IP连接"));
+        ui->disconnectButton->setEnabled(false);
+        ui->clientStatusLabel->setText(str_china("连接失败，请确认网络IP连接"));
     }else{
         if(!timer->isActive())
         {
-            timer->start(100);
+
             ui->openButton->setEnabled(false);
             ui->startButton->setEnabled(false);
             ui->pauseButton->setEnabled(true);
+            ui->disconnectButton->setEnabled(true);
             curstate = STATE_START;
+            timer->start(100);
         }
         SaveIpAddr(ui->lineEditHost->text());
         ui->clientStatusLabel->setText(str_china("连接成功"));
@@ -178,6 +185,7 @@ void tcpClientFileSend::pause()
     curstate = STATE_PAUSE;
     ui->startButton->setEnabled(true);
     ui->pauseButton->setEnabled(false);
+    ui->disconnectButton->setEnabled(true);
     ui->clientStatusLabel->setText(str_china("暂停中..."));
 }
 
@@ -189,6 +197,7 @@ void tcpClientFileSend::startTransfer()
     if(STATE_PAUSE == curstate)
     {
         timer->stop();
+        return;
     }
 
 #ifdef TIMETEST /* 耗时测试 */
@@ -207,7 +216,6 @@ void tcpClientFileSend::startTransfer()
         //        }
         return;
     }
-
     emitSigNums = 0;//发送信号归零
 
     fileImage = grabframeGeometry();
@@ -216,7 +224,7 @@ void tcpClientFileSend::startTransfer()
         Sleep(200);
     }else
     {
-        Sleep(10);
+//        Sleep(10);
     }
 
     //    fileImage =fileImage.convertToFormat(QImage::Format_Indexed8,Qt::AutoColor);
@@ -230,11 +238,23 @@ void tcpClientFileSend::startTransfer()
 
     namelst.append(fileName);
 
-//    fileImage.save(fileName,STREAM_PIC_FORT);
     QByteArray bytearry;
     QBuffer buffer;
     buffer.setBuffer(&bytearry);
-    fileImage.save(&buffer,STREAM_PIC_FORT);
+    if(ui->radioButton_smooth->isChecked())
+    {
+        fileImage.save(&buffer,STREAM_PIC_FORT);
+    }
+    else if(ui->radioButton_highpix->isChecked())
+    {
+        QImage img;
+        img = fileImage.convertToFormat(QImage::Format_ARGB32,Qt::AutoColor);
+        img.save(&buffer,STREAM_PIC_FORT);
+    }
+    else
+    {
+        fileImage.save(&buffer,STREAM_PIC_FORT);
+    }
     buffer.data();
     imgVecArray.append(bytearry);
 
@@ -264,8 +284,10 @@ void tcpClientFileSend::parseImage()
     {
 
 #ifdef DEBUG
-        qDebug() << "namelst count is 0!!";
+        qDebug() << "namelst count is 0!!,return";
+        qDebug() << "======>>>network state:" << p_tcpClient->state();
 #endif
+
         return;
     }
 
@@ -275,31 +297,32 @@ void tcpClientFileSend::parseImage()
     if(SEND_ING == sendDoneFlag)
         return;
 
-    sendDoneFlag = SEND_ING;
+    sendDoneFlag = SEND_ING;//发送中
 
     outBlock.resize(0);
     QString readFname = namelst.at(0);
 #ifdef DEBUG
     qDebug() << "read file name:" << readFname;
 #endif
-    namelst.removeAt(0);
+    if(namelst.count() > 0)
+        namelst.removeAt(0);
 #ifdef DEBUG
     qDebug() << "after delete namelst count:" << namelst.count();
 #endif
 
-//    QDir dir(QDir::currentPath());
-//    if(!dir.exists(dirname))
-//    {
-//        dir.mkdir(dirname);
-//    }
+    //    QDir dir(QDir::currentPath());
+    //    if(!dir.exists(dirname))
+    //    {
+    //        dir.mkdir(dirname);
+    //    }
 
-//    QFile file(readFname);
-//    if(!file.open(QIODevice::ReadOnly)) {
-//#ifdef DEBUG
-//        qDebug()<<"Can't open the file!"<<readFname;
-//#endif
-//        return;
-//    }
+    //    QFile file(readFname);
+    //    if(!file.open(QIODevice::ReadOnly)) {
+    //#ifdef DEBUG
+    //        qDebug()<<"Can't open the file!"<<readFname;
+    //#endif
+    //        return;
+    //    }
 
     /*---------------------------------------
 发送文件数据格式 ：
@@ -310,7 +333,7 @@ void tcpClientFileSend::parseImage()
 ---------------------------------------*/
 
 
-//    outBlockFile = file.readAll();
+    //    outBlockFile = file.readAll();
     outBlockFile = imgVecArray.at(0);
     imgVecArray.remove(0);
 #ifdef DEBUG
@@ -341,8 +364,8 @@ void tcpClientFileSend::parseImage()
     qDebug() << "TotalBytes:" << TotalBytes;
 #endif
 
-//    file.close();
-//    dir.remove(readFname);//删除文件
+    //    file.close();
+    //    dir.remove(readFname);//删除文件
 
 
     return;
@@ -378,14 +401,15 @@ void tcpClientFileSend::updateClientProgress(qint64 numBytes)
         TotalBytes = 0;
         byteWritten = 0;
         sendDoneFlag = SEND_DONE;
-        parseImage();
         if(STATE_PAUSE == curstate)
         {
             timer->stop();
             ui->clientStatusLabel->setText(str_china("暂停中..."));
+            return;
         }else{
             ui->clientStatusLabel->setText(str_china("传输中..."));
         }
+        parseImage();
     }
 
 
@@ -398,11 +422,11 @@ void tcpClientFileSend::displayErr(QAbstractSocket::SocketError socketError)
     if(NULL == p_tcpClient)
     {
         QMessageBox::information(this,str_china("网络"),
-                             str_china("产生如下错误：连接失败"));
+                                 str_china("产生如下错误：连接失败"));
     }else{
         QMessageBox::information(this,str_china("网络"),
-                             str_china("产生如下错误： %1")
-                             .arg(p_tcpClient->errorString()));
+                                 str_china("产生如下错误： %1")
+                                 .arg(p_tcpClient->errorString()));
     }
 
     timer->stop();
@@ -418,9 +442,6 @@ void tcpClientFileSend::displayErr(QAbstractSocket::SocketError socketError)
     deleteImgs();
     namelst.clear();
     ui->clientStatusLabel->setText(str_china("客户端就绪"));
-    ui->startButton->setEnabled(false);
-    ui->openButton->setEnabled(true);
-
 
     picNametime = 1;
     TotalBytes = 0;
@@ -436,6 +457,7 @@ void tcpClientFileSend::displayErr(QAbstractSocket::SocketError socketError)
     ui->openButton->setEnabled(true);
     ui->startButton->setEnabled(false);
     ui->pauseButton->setEnabled(false);
+    ui->disconnectButton->setEnabled(false);
 
 
 #ifdef SHOWCURSOR
@@ -497,21 +519,21 @@ QImage tcpClientFileSend::grabframeGeometry()
 
 void tcpClientFileSend::deleteImgs()
 {
-//    QDir dir(QDir::currentPath());
-//    if(!dir.exists(dirname))
-//    {
-//        dir.mkdir(dirname);
-//    }
+    //    QDir dir(QDir::currentPath());
+    //    if(!dir.exists(dirname))
+    //    {
+    //        dir.mkdir(dirname);
+    //    }
 
 
-//    for(int i=0;i <namelst.count();i++)
-//    {
-//#ifdef DEBUG
-//        qDebug() <<"remove filename:"<<namelst.at(i);
-//#endif
-//        dir.remove(namelst.at(i));
-//    }
-//    //    dir.remove(dirname);
+    //    for(int i=0;i <namelst.count();i++)
+    //    {
+    //#ifdef DEBUG
+    //        qDebug() <<"remove filename:"<<namelst.at(i);
+    //#endif
+    //        dir.remove(namelst.at(i));
+    //    }
+    //    //    dir.remove(dirname);
 
     imgVecArray.clear();
     imgLstArray.clear();
@@ -549,8 +571,46 @@ void tcpClientFileSend::ShutDownAll()
     ui->openButton->setEnabled(true);
     ui->startButton->setEnabled(false);
     ui->pauseButton->setEnabled(false);
+    ui->disconnectButton->setEnabled(false);
     close();
 }
+
+//断开连接
+void tcpClientFileSend::disconnectSocket()
+{
+    timer->stop();
+
+    if(NULL != p_tcpClient)
+    {
+        p_tcpClient->abort();
+        p_tcpClient->waitForDisconnected();
+        p_tcpClient->disconnectFromHost();
+        p_tcpClient->close();
+        p_tcpClient->deleteLater();
+        p_tcpClient = NULL;
+    }
+
+    deleteImgs();
+    namelst.clear();
+    ui->clientStatusLabel->setText(str_china("客户端就绪"));
+
+    picNametime = 1;
+    TotalBytes = 0;
+    byteWritten = 0;
+
+    jpgnameNo = 1; //图片名称计数
+    time_total = 0.0;//耗时时间
+    namelst.clear();//保存的文件名列表
+    sizelst.clear();//保存的文件大小列表
+    sendDoneFlag = SEND_DONE;//发送结束标志
+    emitSigNums = 0;//发送信号的次数
+    curstate = STATE_PAUSE;
+    ui->openButton->setEnabled(true);
+    ui->startButton->setEnabled(false);
+    ui->pauseButton->setEnabled(false);
+    ui->disconnectButton->setEnabled(false);
+}
+
 
 QString tcpClientFileSend::ReadIpAddr()
 {

@@ -8,6 +8,7 @@
 #include <QTcpSocket>
 #include <QHostAddress>
 
+#define STREAM_PIC_FORT_PNG "PNG"
 
 #if 0 //ok 2pic/s
 #define STREAM_PIC_FORT "PNG"
@@ -60,6 +61,7 @@ public slots:
     QImage grabframeGeometry();
     QImage grabDeskScreen();
     void ShutDownAll();
+    void disconnectSocket();//¶Ï¿ªÁ¬½Ó
     QString ReadIpAddr();
     void SaveIpAddr(QString ipaddr);
     void PrintInfoToFile(QString str);

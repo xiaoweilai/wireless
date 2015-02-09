@@ -1,0 +1,317 @@
+E:\wireless prj\wireless\qt_code\v1.5.1\fileClientv1.5.1\fileClient-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____\debug\fileClient.exe 启动中...
+read ip: "192.168.1.103" 
+ipaddr : "192.168.1.103" 
+filename: "/1.jpg" 
+current time: 0.385 s 
+namelst count: 1 
+read file name: "/1.jpg" 
+after delete namelst count: 0 
+read file size: 138670 
+TotalBytes: 138702 
+numBytes:--------->> 32 
+-->:outBlockFile size: 138670 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 138670 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/2.jpg" 
+save  elaspe: 334 ms 
+current time: 0.719 s 
+namelst count: 1 
+read file name: "/2.jpg" 
+after delete namelst count: 0 
+read file size: 133628 
+TotalBytes: 133660 
+numBytes:--------->> 32 
+-->:outBlockFile size: 133628 
+-->:bytesToWrite size: 0 
+filename: "/3.jpg" 
+save  elaspe: 327 ms 
+current time: 1.046 s 
+namelst count: 1 
+numBytes:--------->> 133628 
+-->: send image done!! 
+namelst count: 1 
+read file name: "/3.jpg" 
+after delete namelst count: 0 
+read file size: 132703 
+TotalBytes: 132735 
+numBytes:--------->> 32 
+-->:outBlockFile size: 132703 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 132703 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/4.jpg" 
+save  elaspe: 489 ms 
+current time: 1.535 s 
+namelst count: 1 
+read file name: "/4.jpg" 
+after delete namelst count: 0 
+read file size: 133268 
+TotalBytes: 133300 
+numBytes:--------->> 32 
+-->:outBlockFile size: 133268 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 133268 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/5.jpg" 
+save  elaspe: 385 ms 
+current time: 1.92 s 
+namelst count: 1 
+read file name: "/5.jpg" 
+after delete namelst count: 0 
+read file size: 133233 
+TotalBytes: 133265 
+numBytes:--------->> 32 
+-->:outBlockFile size: 133233 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 133233 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/6.jpg" 
+save  elaspe: 352 ms 
+current time: 2.272 s 
+namelst count: 1 
+read file name: "/6.jpg" 
+after delete namelst count: 0 
+read file size: 131889 
+TotalBytes: 131921 
+numBytes:--------->> 32 
+-->:outBlockFile size: 131889 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 131889 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/7.jpg" 
+save  elaspe: 334 ms 
+current time: 2.606 s 
+namelst count: 1 
+read file name: "/7.jpg" 
+after delete namelst count: 0 
+read file size: 131113 
+TotalBytes: 131145 
+numBytes:--------->> 32 
+-->:outBlockFile size: 131113 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 131113 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/8.jpg" 
+save  elaspe: 328 ms 
+current time: 2.934 s 
+namelst count: 1 
+read file name: "/8.jpg" 
+after delete namelst count: 0 
+read file size: 131019 
+TotalBytes: 131051 
+numBytes:--------->> 32 
+-->:outBlockFile size: 131019 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 131019 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/9.jpg" 
+save  elaspe: 348 ms 
+current time: 3.282 s 
+namelst count: 1 
+read file name: "/9.jpg" 
+after delete namelst count: 0 
+read file size: 129528 
+TotalBytes: 129560 
+filename: "/10.jpg" 
+save  elaspe: 367 ms 
+current time: 3.649 s 
+namelst count: 1 
+numBytes:--------->> 32 
+-->:outBlockFile size: 129528 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 129528 
+-->: send image done!! 
+namelst count: 1 
+read file name: "/10.jpg" 
+after delete namelst count: 0 
+read file size: 135009 
+TotalBytes: 135043 
+numBytes:--------->> 34 
+-->:outBlockFile size: 135009 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 135009 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/11.jpg" 
+save  elaspe: 336 ms 
+current time: 3.985 s 
+namelst count: 1 
+read file name: "/11.jpg" 
+after delete namelst count: 0 
+read file size: 136204 
+TotalBytes: 136238 
+numBytes:--------->> 34 
+-->:outBlockFile size: 136204 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 136204 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/12.jpg" 
+save  elaspe: 399 ms 
+current time: 4.384 s 
+namelst count: 1 
+read file name: "/12.jpg" 
+after delete namelst count: 0 
+read file size: 136352 
+TotalBytes: 136386 
+numBytes:--------->> 34 
+-->:outBlockFile size: 136352 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 136352 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/13.jpg" 
+save  elaspe: 327 ms 
+current time: 4.711 s 
+namelst count: 1 
+read file name: "/13.jpg" 
+after delete namelst count: 0 
+read file size: 136209 
+TotalBytes: 136243 
+numBytes:--------->> 34 
+-->:outBlockFile size: 136209 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 136209 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/14.jpg" 
+save  elaspe: 375 ms 
+current time: 5.086 s 
+namelst count: 1 
+read file name: "/14.jpg" 
+after delete namelst count: 0 
+read file size: 136315 
+TotalBytes: 136349 
+numBytes:--------->> 34 
+-->:outBlockFile size: 136315 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 136315 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/15.jpg" 
+save  elaspe: 340 ms 
+current time: 5.426 s 
+namelst count: 1 
+read file name: "/15.jpg" 
+after delete namelst count: 0 
+read file size: 136334 
+TotalBytes: 136368 
+numBytes:--------->> 34 
+-->:outBlockFile size: 136334 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 136334 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/16.jpg" 
+save  elaspe: 347 ms 
+current time: 5.773 s 
+namelst count: 1 
+read file name: "/16.jpg" 
+after delete namelst count: 0 
+read file size: 136222 
+TotalBytes: 136256 
+numBytes:--------->> 34 
+-->:outBlockFile size: 136222 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 136222 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/17.jpg" 
+save  elaspe: 356 ms 
+current time: 6.129 s 
+namelst count: 1 
+read file name: "/17.jpg" 
+after delete namelst count: 0 
+read file size: 133494 
+TotalBytes: 133528 
+numBytes:--------->> 34 
+-->:outBlockFile size: 133494 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 133494 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/18.jpg" 
+save  elaspe: 361 ms 
+current time: 6.49 s 
+namelst count: 1 
+read file name: "/18.jpg" 
+after delete namelst count: 0 
+read file size: 135540 
+TotalBytes: 135574 
+numBytes:--------->> 34 
+-->:outBlockFile size: 135540 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 135540 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/19.jpg" 
+save  elaspe: 356 ms 
+current time: 6.846 s 
+namelst count: 1 
+read file name: "/19.jpg" 
+after delete namelst count: 0 
+read file size: 133759 
+TotalBytes: 133793 
+numBytes:--------->> 34 
+-->:outBlockFile size: 133759 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 133759 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/20.jpg" 
+save  elaspe: 367 ms 
+current time: 7.213 s 
+namelst count: 1 
+read file name: "/20.jpg" 
+after delete namelst count: 0 
+read file size: 133764 
+TotalBytes: 133798 
+numBytes:--------->> 34 
+-->:outBlockFile size: 133764 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 133764 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+filename: "/21.jpg" 
+save  elaspe: 351 ms 
+current time: 7.564 s 
+namelst count: 1 
+read file name: "/21.jpg" 
+after delete namelst count: 0 
+read file size: 136158 
+TotalBytes: 136192 
+numBytes:--------->> 34 
+-->:outBlockFile size: 136158 
+-->:bytesToWrite size: 0 
+numBytes:--------->> 136158 
+-->: send image done!! 
+namelst count is 0!!,return 
+======>>>network state: QAbstractSocket::ConnectedState 
+E:\wireless prj\wireless\qt_code\v1.5.1\fileClientv1.5.1\fileClient-build-desktop-Qt_4_7_4_for_Desktop_-_MinGW_4_4__Qt_SDK____\debug\fileClient.exe 退出，退出代码: 0
+ {1 ?}
