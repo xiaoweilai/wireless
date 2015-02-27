@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'tcpclientfilesend.h'
 **
-** Created: Thu Feb 5 23:06:03 2015
+** Created: Fri Feb 27 20:07:52 2015
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_tcpClientFileSend[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      16,   14, // methods
+      17,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -46,9 +46,10 @@ static const uint qt_meta_data_tcpClientFileSend[] = {
      225,   18,  218,   18, 0x0a,
      245,   18,  218,   18, 0x0a,
      262,   18,   18,   18, 0x0a,
-     276,   18,  197,   18, 0x0a,
-     296,  289,   18,   18, 0x0a,
-     320,  316,   18,   18, 0x0a,
+     276,   18,   18,   18, 0x0a,
+     295,   18,  197,   18, 0x0a,
+     315,  308,   18,   18, 0x0a,
+     339,  335,   18,   18, 0x0a,
 
        0        // eod
 };
@@ -62,8 +63,9 @@ static const char qt_meta_stringdata_tcpClientFileSend[] = {
     "openFile()\0aboutVer()\0QString\0"
     "GetVersion()\0QImage\0grabframeGeometry()\0"
     "grabDeskScreen()\0ShutDownAll()\0"
-    "ReadIpAddr()\0ipaddr\0SaveIpAddr(QString)\0"
-    "str\0PrintInfoToFile(QString)\0"
+    "disconnectSocket()\0ReadIpAddr()\0ipaddr\0"
+    "SaveIpAddr(QString)\0str\0"
+    "PrintInfoToFile(QString)\0"
 };
 
 void tcpClientFileSend::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -88,10 +90,11 @@ void tcpClientFileSend::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
         case 11: { QImage _r = _t->grabDeskScreen();
             if (_a[0]) *reinterpret_cast< QImage*>(_a[0]) = _r; }  break;
         case 12: _t->ShutDownAll(); break;
-        case 13: { QString _r = _t->ReadIpAddr();
+        case 13: _t->disconnectSocket(); break;
+        case 14: { QString _r = _t->ReadIpAddr();
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 14: _t->SaveIpAddr((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 15: _t->PrintInfoToFile((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 15: _t->SaveIpAddr((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 16: _t->PrintInfoToFile((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -129,9 +132,9 @@ int tcpClientFileSend::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 16)
+        if (_id < 17)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 16;
+        _id -= 17;
     }
     return _id;
 }

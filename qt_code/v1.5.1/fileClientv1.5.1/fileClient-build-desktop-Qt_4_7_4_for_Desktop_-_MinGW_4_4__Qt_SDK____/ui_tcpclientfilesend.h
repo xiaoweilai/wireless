@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'tcpclientfilesend.ui'
 **
-** Created: Mon Feb 9 21:41:26 2015
+** Created: Fri Feb 27 20:09:10 2015
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -115,6 +115,18 @@ public:
         radioButton_highpix->setGeometry(QRect(90, 10, 81, 41));
         radioButton_highpix->setFont(font);
         tcpClientFileSend->setCentralWidget(centralWidget);
+        checkBox_speed->raise();
+        startButton->raise();
+        pauseButton->raise();
+        openButton->raise();
+        clientStatusLabel->raise();
+        lineEditHost->raise();
+        label->raise();
+        comboBox_grabScreenSize->raise();
+        pushbtn_about->raise();
+        clientStatusLabel_2->raise();
+        disconnectButton->raise();
+        groupBox->raise();
 
         retranslateUi(tcpClientFileSend);
 
