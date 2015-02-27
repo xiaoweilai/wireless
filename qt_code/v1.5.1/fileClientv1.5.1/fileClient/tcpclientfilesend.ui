@@ -265,6 +265,18 @@
      </property>
     </widget>
    </widget>
+   <zorder>checkBox_speed</zorder>
+   <zorder>startButton</zorder>
+   <zorder>pauseButton</zorder>
+   <zorder>openButton</zorder>
+   <zorder>clientStatusLabel</zorder>
+   <zorder>lineEditHost</zorder>
+   <zorder>label</zorder>
+   <zorder>comboBox_grabScreenSize</zorder>
+   <zorder>pushbtn_about</zorder>
+   <zorder>clientStatusLabel_2</zorder>
+   <zorder>disconnectButton</zorder>
+   <zorder>groupBox</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

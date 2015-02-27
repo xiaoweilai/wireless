@@ -61,7 +61,8 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     ui->disconnectButton->setEnabled(false);
     ui->lineEditHost->setText(ReadIpAddr());
     //    ui->lineEditPort->setText(DEFAULT_PORT);
-    ui->checkBox_speed->setChecked(true);
+    ui->checkBox_speed->setChecked(false);
+    ui->checkBox_speed->hide();
 
     QStringList screensize;
     screensize.clear();
