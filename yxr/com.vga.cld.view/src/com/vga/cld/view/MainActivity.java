@@ -203,6 +203,18 @@ public class MainActivity extends Activity implements View.OnClickListener{
 					mHandler.sendEmptyMessage(6);
 	     			receiveImag.interrupt();
 				}
+				receiveImag = null;
+				try {
+     				if (null != mDis)
+     					mDis.close();
+     				if (null != mDos)
+     					mDos.close();
+     				if (null != ss){
+     					ss.close();
+     				}
+     			} catch (IOException ee) {
+     				ee.printStackTrace();
+     			}
 			}
 			
 		}
