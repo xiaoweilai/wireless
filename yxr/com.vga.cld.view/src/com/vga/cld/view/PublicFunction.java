@@ -1,20 +1,26 @@
 package com.vga.cld.view;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.net.Inet4Address;
 import java.net.InetSocketAddress;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 public class PublicFunction {
 private static int curImageIndex = 0;
@@ -75,6 +81,115 @@ private static int curImageIndex = 0;
 		wh[1] = height;
 		System.out.println("wh[0] = " + wh[0] + "wh[1] = " + wh[1]);
 		return wh;
+	}
+	
+	public static void writeFile(Context mContext,String path,String content) {
+		String firstpath = "bytesave";
+		
+		if(GetSD.getSDPath()!=null){
+			firstpath=GetSD.getSDPath()+"/"+firstpath;
+		}
+		if(GetSD.getSDFreeSize()<1){
+			Toast.makeText(mContext, "SD卡剩余空间不足，不能保存记录，请释放SD卡空间", Toast.LENGTH_LONG).show();
+			return;
+		}
+		File idFile = new File(firstpath);
+		if (!idFile.exists()) {
+			idFile.mkdir();
+		}
+		String recPath = firstpath + "/"+path;
+		idFile = new File(recPath);
+		if (!idFile.exists()) {
+			try {
+				idFile.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			FileWriter fileWriter = new FileWriter(recPath, true);
+			fileWriter.write(content);
+			fileWriter.flush();
+			fileWriter.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void writeFile(Context mContext,String path,byte[] b) {
+		String firstpath = "bytesave";
+		
+		if(GetSD.getSDPath()!=null){
+			firstpath=GetSD.getSDPath()+"/"+firstpath;
+		}
+		if(GetSD.getSDFreeSize()<1){
+			Toast.makeText(mContext, "SD卡剩余空间不足，不能保存记录，请释放SD卡空间", Toast.LENGTH_LONG).show();
+			return;
+		}
+		File idFile = new File(firstpath);
+		if (!idFile.exists()) {
+			idFile.mkdir();
+		}
+		String recPath = firstpath + "/"+path;
+		idFile = new File(recPath);
+		if (!idFile.exists()) {
+			try {
+				idFile.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		getFileFromBytes(b, recPath);
+//		try {
+//			FileWriter fileWriter = new FileWriter(recPath, false);
+//			fileWriter.write(content);
+//			
+//			fileWriter.flush();
+//			fileWriter.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+	}
+	
+	public static File getFileFromBytes(byte[] b, String outputFile) { 
+        File ret = null; 
+        BufferedOutputStream stream = null; 
+        try {
+           ret = new File(outputFile); 
+           FileOutputStream fstream = new FileOutputStream(ret, true); 
+           stream = new BufferedOutputStream(fstream); 
+           stream.write(b);
+         
+        } catch (Exception e) { 
+	//	            log.error("helper:get file from byte process error!"); 
+	    e.printStackTrace(); 
+	} finally {
+	    if (stream != null) {
+	        try {
+	            stream.close(); 
+	        } catch (IOException e) {
+	//	                    log.error("helper:get file from byte process error!"); 
+	                e.printStackTrace(); 
+	            }
+	        }
+	    }
+	    return ret; 
+	}
+	/**
+	  * 获取现在时间
+	  * 
+	  * @return返回字符串格式 yyyy-MM-dd HH:mm:ss
+	  */
+	@SuppressLint("SimpleDateFormat")
+	public static String getStringDate() {
+	  Date currentTime = new Date(System.currentTimeMillis());
+	  SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	  String dateString = formatter.format(currentTime);
+	  return dateString;
 	}
 	
 	public static void saveBitmap(Bitmap bm) {

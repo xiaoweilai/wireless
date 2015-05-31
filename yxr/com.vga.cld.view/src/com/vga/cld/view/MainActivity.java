@@ -10,16 +10,12 @@ import java.net.SocketException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Message;
 import android.view.Menu;
 import android.view.View;
@@ -50,6 +46,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	private RelativeLayout mRelMain;
 	private MyAPP mAPP = null; 
 	private Thread receiveImag;
+	private static String curStartTimeFileName;
 	
 	@SuppressLint("NewApi")
 	@Override
@@ -61,6 +58,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 //		mAPP = (MyAPP)getApplication();
 //		mAPP.setHandler(mHandler);
 		PublicFunction.getScreenWithAndHeight(mContext);
+		curStartTimeFileName = PublicFunction.getStringDate();
 		mImgLcd = (ImageView)findViewById(R.id.img_lcd);
 		mImgLcd.setImageResource(R.drawable.angelababy);
 		mImgLcd.setClickable(true);
@@ -171,28 +169,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		         mDos = new DataOutputStream(mSocket.getOutputStream());
 		         //用于接收客户端发来的数据的输入流
 		         mDis = new DataInputStream(mSocket.getInputStream());
+		         mHandler.sendEmptyMessageDelayed(8, 5000);
 		         while(!mReceiveSuccessedFlag){
-		        	 try{ 
-			        	 mSocket.sendUrgentData(0xFF); 
-			        	 }catch(Exception ex){ 
-			        		 System.out.println("线程连接异常  mReceiveSuccessedFlag" + Thread.currentThread().getName());
-			        		 try {
-			     				if (null != mDis)
-			     					mDis.close();
-			     				if (null != mDos)
-			     					mDos.close();
-			     				if (null != ss){
-			     					ss.close();
-			     				}
-			     			} catch (IOException ee) {
-			     				ee.printStackTrace();
-			     			}
-			     			mHandler.sendEmptyMessage(6);
-			     			receiveImag.interrupt();
-			     			receiveImag = null;
-			     			mReceiveSuccessedFlag = true;
-			     			break;
-			        	 }
 		        	 receiveMessage(mDis,mSocket,mDos);
 	        	 }
 			} catch (IOException e) {
@@ -309,9 +287,41 @@ public void receiveMessage(DataInputStream input, Socket s, DataOutputStream out
 				}else if(msg.what == 7){
 					setIpAddress();
 					SocketServer();
+				}else if (msg.what == 8){
+		        	 try{ 
+			        	 mSocket.sendUrgentData(0xFF); 
+			        	 mHandler.sendEmptyMessageDelayed(8, 5000);
+		        	 }catch(Exception ex){
+		        		 mHandler.removeMessages(8);
+		        		 PublicFunction.writeFile(mContext, getLogFileName(), "线程连接异常  mReceiveSuccessedFlag" + Thread.currentThread().getName());
+		        		 System.out.println("线程连接异常  mReceiveSuccessedFlag" + Thread.currentThread().getName());
+//		        		 try {
+//		     				if (null != mDis)
+//		     					mDis.close();
+//		     				if (null != mDos)
+//		     					mDos.close();
+//		     				if (null != ss){
+//		     					ss.close();
+//		     				}
+//		     			} catch (IOException ee) {
+//		     				ee.printStackTrace();
+//		     			}
+		        		mReceiveSuccessedFlag = true;
+		     			mHandler.sendEmptyMessage(6);
+		     			if(receiveImag != null){
+			     			receiveImag.interrupt();
+			     			receiveImag = null;
+		     			}
+		     			
+		        	 }
 				}
 	        }  
 	}  
+	    
+		public static String getLogFileName(){
+			return curStartTimeFileName + ".txt";
+		}
+		
 		@Override
 		public void onClick(View v) {
 //			int i = mRelMain.getSystemUiVisibility();  
