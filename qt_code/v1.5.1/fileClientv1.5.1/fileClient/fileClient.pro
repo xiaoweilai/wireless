@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui network
+QT       += widgets
 
 TARGET = fileClient
 TEMPLATE = app

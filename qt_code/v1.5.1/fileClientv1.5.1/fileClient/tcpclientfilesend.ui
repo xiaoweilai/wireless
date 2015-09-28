@@ -18,9 +18,9 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>200</y>
-      <width>131</width>
-      <height>71</height>
+      <y>140</y>
+      <width>441</width>
+      <height>131</height>
      </rect>
     </property>
     <property name="font">
@@ -33,30 +33,11 @@
      <string>开始</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pauseButton">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>200</y>
-      <width>121</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>宋体</family>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>暂停</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="openButton">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>70</y>
+      <x>310</x>
+      <y>10</y>
       <width>91</width>
       <height>51</height>
      </rect>
@@ -90,113 +71,11 @@
      <string>客户端就绪</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEditHost">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>70</y>
-      <width>261</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>宋体</family>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>30</y>
-      <width>241</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>宋体</family>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>请输入服务器IP：</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboBox_grabScreenSize">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>130</y>
-      <width>171</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>宋体</family>
-      <pointsize>18</pointsize>
-     </font>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushbtn_about">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>200</y>
-      <width>111</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>宋体</family>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>关于</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="clientStatusLabel_2">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>140</y>
-      <width>181</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>宋体</family>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>分辨率：</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkBox_speed">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>30</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>低速传输</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="disconnectButton">
     <property name="geometry">
      <rect>
       <x>420</x>
-      <y>70</y>
+      <y>0</y>
       <width>91</width>
       <height>51</height>
      </rect>
@@ -211,72 +90,47 @@
      <string>断开</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>130</y>
-      <width>171</width>
-      <height>51</height>
+      <x>10</x>
+      <y>107</y>
+      <width>491</width>
+      <height>41</height>
      </rect>
     </property>
-    <property name="title">
-     <string/>
-    </property>
-    <widget class="QRadioButton" name="radioButton_smooth">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>91</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>宋体</family>
-       <pointsize>20</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>流畅</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="radioButton_highpix">
-     <property name="geometry">
-      <rect>
-       <x>90</x>
-       <y>10</y>
-       <width>81</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>宋体</family>
-       <pointsize>20</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>高清</string>
-     </property>
-    </widget>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <family>宋体</family>
+         <pointsize>20</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="lineEditHost">
+       <property name="font">
+        <font>
+         <family>宋体</family>
+         <pointsize>20</pointsize>
+        </font>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
-   <zorder>checkBox_speed</zorder>
+   <zorder>label</zorder>
    <zorder>startButton</zorder>
-   <zorder>pauseButton</zorder>
    <zorder>openButton</zorder>
    <zorder>clientStatusLabel</zorder>
    <zorder>lineEditHost</zorder>
-   <zorder>label</zorder>
-   <zorder>comboBox_grabScreenSize</zorder>
-   <zorder>pushbtn_about</zorder>
-   <zorder>clientStatusLabel_2</zorder>
    <zorder>disconnectButton</zorder>
-   <zorder>groupBox</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

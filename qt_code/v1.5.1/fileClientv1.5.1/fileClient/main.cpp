@@ -1,5 +1,7 @@
 #if 1
-#include <QtGui/QApplication>
+//#include <QtGui/QApplication>
+#include <QApplication>
+#include <QtGui>
 #include "tcpclientfilesend.h"
 #include <QTextCodec>
 #include <QtGui>

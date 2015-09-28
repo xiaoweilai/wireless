@@ -5,11 +5,14 @@
 #include <QDesktopWidget>
 #include <windows.h>
 #include <QIODevice>
+#include <QMessageBox>
+#include <QScreen>
+#include <QDesktopWidget>
 
 //#define DEBUG    /* 调试信息 */
 //#define TIMETEST /* 耗时测试 */
 
-const char version_filetransClient[]="v1.4";
+const char version_filetransClient[]="v1.5";
 
 
 #if 1
@@ -35,11 +38,19 @@ const char version_filetransClient[]="v1.4";
 
 tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::tcpClientFileSend)
+    ui(new Ui::tcpClientFileSend),
+    pscreen(NULL)
 {
 
     ui->setupUi(this);
+    ui->lineEditHost->setStyleSheet("QLineEdit{font: bold italic large \"Times New Roman\";font-size:25px;color:rgb(55,100,255);height:50px;border:4px solid rgb(155,200,33);background-color: rgba(0,0,0,30);border-radius:15px;selection-color:pink}");
+    ui->label->setStyleSheet("QLabel{font: bold italic large \"Times New Roman\";font-size:25px;color:rgb(55,100,255);height:50px;border:4px solid rgb(155,200,33);background-color: rgba(0,0,0,30);border-radius:15px;selection-color:pink}");
+    showVerion();
+    connect(ui->lineEditHost,SIGNAL(textChanged(QString)),this,SLOT(textCheck(QString)));
 
+    pscreen = QGuiApplication::primaryScreen();;
+//    ui->radioButton_smooth->setChecked(TRUE);
+//        fileImage.save(&buffer,STREAM_PIC_FORT);
     picNametime = 1;
     TotalBytes = 0;
     byteWritten = 0;
@@ -57,22 +68,22 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
 
     ui->openButton->setEnabled(true);
     ui->startButton->setEnabled(false);
-    ui->pauseButton->setEnabled(false);
+//    ui->pauseButton->setEnabled(false);
     ui->disconnectButton->setEnabled(false);
     ui->lineEditHost->setText(ReadIpAddr());
     //    ui->lineEditPort->setText(DEFAULT_PORT);
-    ui->checkBox_speed->setChecked(false);
-    ui->checkBox_speed->hide();
+//    ui->checkBox_speed->setChecked(false);
+//    ui->checkBox_speed->hide();
 
-    QStringList screensize;
-    screensize.clear();
-    screensize <<"gemetory size"  //0
-              <<"800 X 600"
-             <<"1024 X 768"
-            <<"1366 X 768"
-           <<"fullscreen";
-    ui->comboBox_grabScreenSize->addItems(screensize);
-    ui->comboBox_grabScreenSize->setCurrentIndex(3);//"800 X 600"
+//    QStringList screensize;
+//    screensize.clear();
+//    screensize <<"gemetory size"  //0
+//              <<"800 X 600"
+//             <<"1024 X 768"
+//            <<"1366 X 768"
+//           <<"fullscreen";
+//    ui->comboBox_grabScreenSize->addItems(screensize);
+//    ui->comboBox_grabScreenSize->setCurrentIndex(3);//"800 X 600"
 
     //    dirname = QString("images");
     //    QDir dir(QDir::currentPath());
@@ -82,9 +93,9 @@ tcpClientFileSend::tcpClientFileSend(QWidget *parent) :
     //    }
 
     connect(ui->startButton,SIGNAL(clicked()),this,SLOT(start()));
-    connect(ui->pauseButton,SIGNAL(clicked()),this,SLOT(pause()));
+//    connect(ui->pauseButton,SIGNAL(clicked()),this,SLOT(pause()));
     connect(ui->openButton,SIGNAL(clicked()),this,SLOT(openFile()));
-    connect(ui->pushbtn_about,SIGNAL(clicked()),this,SLOT(aboutVer()));
+//    connect(ui->pushbtn_about,SIGNAL(clicked()),this,SLOT(aboutVer()));
     connect(ui->disconnectButton,SIGNAL(clicked()),this,
             SLOT(disconnectSocket()));
 
@@ -133,7 +144,7 @@ void tcpClientFileSend::start()
     byteWritten = 0;
     curstate = STATE_START;
     ui->startButton->setEnabled(false);
-    ui->pauseButton->setEnabled(true);
+//    ui->pauseButton->setEnabled(true);
 
 
     ui->clientStatusLabel->setText(str_china("连接中..."));
@@ -161,7 +172,7 @@ void tcpClientFileSend::start()
 
         ui->openButton->setEnabled(true);
         ui->startButton->setEnabled(false);
-        ui->pauseButton->setEnabled(false);
+//        ui->pauseButton->setEnabled(false);
         ui->disconnectButton->setEnabled(false);
         ui->clientStatusLabel->setText(str_china("连接失败，请确认网络IP连接"));
     }else{
@@ -170,7 +181,7 @@ void tcpClientFileSend::start()
 
             ui->openButton->setEnabled(false);
             ui->startButton->setEnabled(false);
-            ui->pauseButton->setEnabled(true);
+//            ui->pauseButton->setEnabled(true);
             ui->disconnectButton->setEnabled(true);
             curstate = STATE_START;
             timer->start(100);
@@ -185,7 +196,7 @@ void tcpClientFileSend::pause()
 {
     curstate = STATE_PAUSE;
     ui->startButton->setEnabled(true);
-    ui->pauseButton->setEnabled(false);
+//    ui->pauseButton->setEnabled(false);
     ui->disconnectButton->setEnabled(true);
     ui->clientStatusLabel->setText(str_china("暂停中..."));
 }
@@ -220,13 +231,13 @@ void tcpClientFileSend::startTransfer()
     emitSigNums = 0;//发送信号归零
 
     fileImage = grabframeGeometry();
-    if(ui->checkBox_speed->isChecked())
-    {
-        Sleep(200);
-    }else
-    {
-//        Sleep(10);
-    }
+//    if(ui->checkBox_speed->isChecked())
+//    {
+//        Sleep(200);
+//    }else
+//    {
+////        Sleep(10);
+//    }
 
     //    fileImage =fileImage.convertToFormat(QImage::Format_Indexed8,Qt::AutoColor);
 
@@ -242,20 +253,21 @@ void tcpClientFileSend::startTransfer()
     QByteArray bytearry;
     QBuffer buffer;
     buffer.setBuffer(&bytearry);
-    if(ui->radioButton_smooth->isChecked())
-    {
-        fileImage.save(&buffer,STREAM_PIC_FORT);
-    }
-    else if(ui->radioButton_highpix->isChecked())
-    {
-        QImage img;
-        img = fileImage.convertToFormat(QImage::Format_ARGB32,Qt::AutoColor);
-        img.save(&buffer,STREAM_PIC_FORT);
-    }
-    else
-    {
-        fileImage.save(&buffer,STREAM_PIC_FORT);
-    }
+    fileImage.save(&buffer,STREAM_PIC_FORT);
+//    if(ui->radioButton_smooth->isChecked())
+//    {
+//        fileImage.save(&buffer,STREAM_PIC_FORT);
+//    }
+//    else if(ui->radioButton_highpix->isChecked())
+//    {
+//        QImage img;
+//        img = fileImage.convertToFormat(QImage::Format_ARGB32,Qt::AutoColor);
+//        img.save(&buffer,STREAM_PIC_FORT);
+//    }
+//    else
+//    {
+//        fileImage.save(&buffer,STREAM_PIC_FORT);
+//    }
     buffer.data();
     imgVecArray.append(bytearry);
 
@@ -457,7 +469,7 @@ void tcpClientFileSend::displayErr(QAbstractSocket::SocketError socketError)
     curstate = STATE_PAUSE;
     ui->openButton->setEnabled(true);
     ui->startButton->setEnabled(false);
-    ui->pauseButton->setEnabled(false);
+//    ui->pauseButton->setEnabled(false);
     ui->disconnectButton->setEnabled(false);
 
 
@@ -469,73 +481,25 @@ void tcpClientFileSend::displayErr(QAbstractSocket::SocketError socketError)
 //桌面尺寸
 QImage tcpClientFileSend::grabDeskScreen()
 {
-    return  QPixmap::grabWindow(QApplication::desktop()->winId(),
-                                0,
-                                0,
-                                QApplication::desktop()->width(),
-                                QApplication::desktop()->height()).toImage();
+    if (pscreen){
+        return pscreen->grabWindow(0).toImage();
+    }
+    else
+    {
+        QImage img;
+        qDebug() << "grab DeskScreen Err!";
+        return img;
+    }
 }
 
 //界面尺寸
 QImage tcpClientFileSend::grabframeGeometry()
 {
-    if(ui->comboBox_grabScreenSize->currentText().contains("800"))
-    {
-        return QPixmap::grabWindow(QApplication::desktop()->winId(),
-                                   pos().x(),
-                                   pos().y(),
-                                   800,
-                                   600).toImage();
-    }
-    else if(ui->comboBox_grabScreenSize->currentText().contains("1024"))
-    {
-        return QPixmap::grabWindow(QApplication::desktop()->winId(),
-                                   pos().x(),
-                                   pos().y(),
-                                   1024,
-                                   768).toImage();
-    }
-    else if(ui->comboBox_grabScreenSize->currentText().contains("fullscreen"))
-    {
-        return grabDeskScreen();
-    }
-    else if(ui->comboBox_grabScreenSize->currentText().contains("1366"))
-    {
-        return QPixmap::grabWindow(QApplication::desktop()->winId(),
-                                   0,
-                                   0,
-                                   1366,
-                                   768).toImage();
-    }
-    else
-    {
-        return QPixmap::grabWindow(QApplication::desktop()->winId(),
-                                   pos().x(),
-                                   pos().y(),
-                                   frameGeometry().width(),
-                                   frameGeometry().height()).toImage();
-    }
-
+    return grabDeskScreen();
 }
 
 void tcpClientFileSend::deleteImgs()
 {
-    //    QDir dir(QDir::currentPath());
-    //    if(!dir.exists(dirname))
-    //    {
-    //        dir.mkdir(dirname);
-    //    }
-
-
-    //    for(int i=0;i <namelst.count();i++)
-    //    {
-    //#ifdef DEBUG
-    //        qDebug() <<"remove filename:"<<namelst.at(i);
-    //#endif
-    //        dir.remove(namelst.at(i));
-    //    }
-    //    //    dir.remove(dirname);
-
     imgVecArray.clear();
     imgLstArray.clear();
 }
@@ -571,7 +535,7 @@ void tcpClientFileSend::ShutDownAll()
     curstate = STATE_PAUSE;
     ui->openButton->setEnabled(true);
     ui->startButton->setEnabled(false);
-    ui->pauseButton->setEnabled(false);
+//    ui->pauseButton->setEnabled(false);
     ui->disconnectButton->setEnabled(false);
     close();
 }
@@ -608,7 +572,7 @@ void tcpClientFileSend::disconnectSocket()
     curstate = STATE_PAUSE;
     ui->openButton->setEnabled(true);
     ui->startButton->setEnabled(false);
-    ui->pauseButton->setEnabled(false);
+//    ui->pauseButton->setEnabled(false);
     ui->disconnectButton->setEnabled(false);
 }
 
@@ -696,4 +660,24 @@ void tcpClientFileSend::aboutVer()
 {
     QMessageBox::information(NULL, str_china("版本"), GetVersion(),NULL,NULL);
     return;
+}
+
+void tcpClientFileSend::showVerion(void)
+{
+    QString verinfo = QString::fromLocal8Bit("录屏传输 ") + QString::fromLocal8Bit(version_filetransClient);
+    ui->clientStatusLabel->setText(verinfo);
+//    ui->statusBar->showMessage(verinfo);
+}
+
+//检测文本变化
+void tcpClientFileSend::textCheck(QString str)
+{
+    str = str.replace(" ","");
+    if(str.isEmpty())
+    {
+        ui->label->setText(QString::fromLocal8Bit(" 请输入IP地址,并点击开始按钮进行传输"));
+    }else{
+        ui->label->setText(QString::fromLocal8Bit(""));
+    }
+
 }

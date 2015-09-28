@@ -7,6 +7,7 @@
 #include <QAbstractSocket>
 #include <QTcpSocket>
 #include <QHostAddress>
+#include <QScreen>
 
 #define STREAM_PIC_FORT_PNG "PNG"
 
@@ -66,8 +67,10 @@ public slots:
     void SaveIpAddr(QString ipaddr);
     void PrintInfoToFile(QString str);
 
+    void textCheck(QString str);
 private:
     void deleteImgs(); //关闭后删除文件夹
+    void showVerion();
 
 
 private:
@@ -111,6 +114,7 @@ private:
     QVector<QByteArray> imgVecArray;//存储图片的缓存，vector类型
     QList<QByteArray>   imgLstArray;//存储图片的缓存，lst类型
 
+    QScreen *pscreen;
 signals:
     void emitImgZeroSignal();//当namelst为空时，发送信号调用parseImage();
 };
